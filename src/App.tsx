@@ -1,25 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
+import {lazy, Suspense} from 'react';
+import {Routes, Route} from 'react-router-dom';
+
+//!Widgets
+import LoaderPage from "components/widgets/loader-page";
+
+//!Components
+import Footer from "components/footer";
+import Header from "components/header";
+
 import './App.css';
+
+//!Pages
+const HomeServicesAddress = lazy(() => import("components/pages/home-services/address"));
+const HomeServicesPlansWelcome = lazy(() => import("components/pages/home-services/plans-welcome"))
+const HomeServicesPlans = lazy(() => import("components/pages/home-services/plans"));
+const Home = lazy(() => import("components/pages/home"));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header></Header>
+      <main>
+        <Routes>
+          <Route 
+            path="/"
+            element={
+              <Suspense fallback={<LoaderPage></LoaderPage>}>
+                <Home></Home>
+              </Suspense>
+            }>
+          </Route>
+
+          <Route 
+            path="/servicios-hogar-direccion"
+            element={
+              <Suspense fallback={<LoaderPage></LoaderPage>}>
+                <HomeServicesAddress></HomeServicesAddress>
+              </Suspense>
+            }>
+          </Route>
+
+          <Route 
+            path="/servicios-hogar-planes-bienvenida"
+            element={
+              <Suspense fallback={<LoaderPage></LoaderPage>}>
+                <HomeServicesPlansWelcome></HomeServicesPlansWelcome>
+              </Suspense>
+            }>
+          </Route>
+
+          <Route 
+            path="/servicios-hogar-planes"
+            element={
+              <Suspense fallback={<LoaderPage></LoaderPage>}>
+                <HomeServicesPlans></HomeServicesPlans>
+              </Suspense>
+            }>
+          </Route>
+        </Routes>
+      </main>
+      <Footer></Footer>
+    </>
   );
 }
 
