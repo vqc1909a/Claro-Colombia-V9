@@ -9,7 +9,7 @@ import {
     CardHeader,
     CardMedia,
     CardActions,
-    Button,
+    Fade
 } from "@mui/material";
 
 import StyledCard from "components/StyledUi/StyledCard";
@@ -22,33 +22,41 @@ import Carousel from "react-material-ui-carousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-//!Uuids
+//! Uuids
 import { v4 as uuid } from 'uuid';
 
+//! Hooks
+import useScrollToTop from "utils/hooks/useScrollToTop";
+
+
 //! Interfaces
-export interface ItemArgs {
-    item: {
-        image: string;
-    };
-}
+import {ItemArgs, HeaderHomeSectionArgs} from "./interfaces";
+import StyledButton from "components/StyledUi/StyledButton";
+
 
 function Item({item}: ItemArgs) {
     const {image} = item;
     return (
-        <Paper
-            sx={(theme) => ({
+            // Por el momento aplicaremos       estilo a este paper y no al hero__content xq esta es una biblioteca de tercero y no tiene identificadore mui para hacer alguna modificación
+            <Paper sx={(theme) => ({
                 width: "100%",
                 height: "60vh",
+                marginBottom: theme.spacing(1),
                 [theme.breakpoints.up("sm")]: {
-                    height: "65vh",
+                    height: "63vh",
+                    marginTop: theme.spacing(3),
+                    marginBottom: theme.spacing(3),
                 },
                 [theme.breakpoints.up("md")]: {
-                    height: "70vh",
+                    height: "65vh",
+                    marginTop: theme.spacing(5),
+                    marginBottom: theme.spacing(5),
                 },
-            })}
-        >
-            <StyledImage src={image}></StyledImage>
-        </Paper>
+            })}>
+                <StyledImage src={image} loading="lazy"></StyledImage>
+            </Paper>
+            
+        
     );
 }
 
@@ -330,9 +338,7 @@ const itemsSectionNewCellPhones = [
     }
 ]
 
-interface HeaderHomeSectionArgs {
-    title: string;
-}
+
 
 const HeaderHomeSection = ({title}: HeaderHomeSectionArgs) => {
     return (
@@ -367,100 +373,107 @@ function Home() {
     // }
     // window.addEventListener('resize', reportWindowSize);
 
+    //! Effects
+    useScrollToTop();
+    
     return (
         <>
-            {/* Hero Section */}
-            <StyledContainer
-                maxWidth={false}
-                className="container-home container-hero"
-            >
-                <StyledGrid container className="hero">
-                    {/* Title Hero */}
-                    <Hidden smUp>
-                        <Toolbar className="hero__intro">
-                            <Typography variant="h4" component="h1">
-                                Tienda
-                            </Typography>
-                        </Toolbar>
-                    </Hidden>
-
-                    {/* Content Hero */}
-                    <Box className="hero__content">
-                        <Hidden smDown>
-                            <Carousel
-                                animation="slide"
-                                indicators={false}
-                                navButtonsAlwaysVisible={true}
-                                navButtonsProps={{
-                                    style: {
-                                        backgroundColor: "transparent",
-                                        color: "white",
-                                        border: "2px solid white",
-                                        borderRadius: "3px",
-                                        marginLeft: "2rem",
-                                        marginRight: "2rem",
-                                    },
-                                }}
-                                NextIcon={<ArrowForwardIosIcon />}
-                                PrevIcon={<ArrowBackIosNewIcon />}
-                                next={(next, active) =>
-                                    console.log(
-                                        `we left ${active}, and are now at ${next}`
-                                    )
-                                }
-                                prev={(prev, active) =>
-                                    console.log(
-                                        `we left ${active}, and are now at ${prev}`
-                                    )
-                                }
-                                sx={{width: "100%", height: "100%"}}
-                            >
-                                
-                                    {itemsHeroDesktop.map((item) => (
-                                        <Item key={item._id} item={item} />
-                                    ))}
-                            </Carousel>
-                        </Hidden>
-                       
+            <Fade in={true} timeout={1000} easing="ease-in-out">
+                {/* Hero Section */}
+                <StyledContainer
+                    maxWidth={false}
+                    className="container-home container-hero"
+                >
+                    <StyledGrid container className="hero">
+                        {/* Title Hero */}
                         <Hidden smUp>
-                            <Carousel
-                                animation="slide"
-                                indicators={false}
-                                navButtonsAlwaysVisible={true}
-                                navButtonsProps={{
-                                    style: {
-                                        backgroundColor: "transparent",
-                                        color: "white",
-                                        border: "2px solid white",
-                                        borderRadius: "3px",
-                                        marginLeft: "2rem",
-                                        marginRight: "2rem",
-                                    },
-                                }}
-                                NextIcon={<ArrowForwardIosIcon />}
-                                PrevIcon={<ArrowBackIosNewIcon />}
-                                next={(next, active) =>
-                                    console.log(
-                                        `we left ${active}, and are now at ${next}`
-                                    )
-                                }
-                                prev={(prev, active) =>
-                                    console.log(
-                                        `we left ${active}, and are now at ${prev}`
-                                    )
-                                }
-                                sx={{width: "100%", height: "100%"}}
-                            >
-                                
-                                    {itemsHeroMobile.map((item) => (
-                                        <Item key={item._id} item={item} />
-                                    ))} 
-                            </Carousel>
+                            <Toolbar className="hero__intro">
+                                <Typography variant="h4" component="h1">
+                                    Tienda
+                                </Typography>
+                            </Toolbar>
                         </Hidden>
-                    </Box>
-                </StyledGrid>
-            </StyledContainer>
-            
+
+                        {/* Content Hero: por el momento estamos utilizando una biblioteca de terceros para el carrusel y no aplicaremos ninugn estilo al hero content */}
+                        <Box className="hero__content">
+                            {/* Carousel Desktop */}
+                            <Hidden smDown>
+                                <Carousel
+                                    animation="slide"
+                                    indicators={false}
+                                    navButtonsAlwaysVisible={true}
+                                    navButtonsProps={{
+                                        style: {
+                                            backgroundColor: "transparent",
+                                            color: "white",
+                                            border: "2px solid white",
+                                            borderRadius: "3px",
+                                            marginLeft: "2rem",
+                                            marginRight: "2rem",
+                                        },
+                                    }}
+                                    NextIcon={<ArrowForwardIosIcon />}
+                                    PrevIcon={<ArrowBackIosNewIcon />}
+                                    next={(next, active) =>
+                                        console.log(
+                                            `we left ${active}, and are now at ${next}`
+                                        )
+                                    }
+                                    prev={(prev, active) =>
+                                        console.log(
+                                            `we left ${active}, and are now at ${prev}`
+                                        )
+                                    }
+                                    sx={{width: "100%", height: "100%"}}
+                                >
+                                    
+                                        {itemsHeroDesktop.map((item) => (
+                                            <Item key={item._id} item={item} />
+                                        ))}
+                                </Carousel>
+                            </Hidden>
+                            
+                            {/* Carousel Mobile */}
+                            <Hidden smUp>
+                                <Carousel
+                                    animation="slide"
+                                    indicators={false}
+                                    navButtonsAlwaysVisible={true}
+                                    navButtonsProps={{
+                                        style: {
+                                            backgroundColor: "transparent",
+                                            color: "white",
+                                            border: "2px solid white",
+                                            borderRadius: "3px",
+                                            marginLeft: "2rem",
+                                            marginRight: "2rem",
+                                        },
+                                    }}
+                                    NextIcon={<ArrowForwardIosIcon />}
+                                    PrevIcon={<ArrowBackIosNewIcon />}
+                                    next={(next, active) =>
+                                        console.log(
+                                            `we left ${active}, and are now at ${next}`
+                                        )
+                                    }
+                                    prev={(prev, active) =>
+                                        console.log(
+                                            `we left ${active}, and are now at ${prev}`
+                                        )
+                                    }
+                                    sx={{width: "100%", height: "100%"}}
+                                >
+                                    
+                                        {itemsHeroMobile.map((item) => (
+                                            <Item key={item._id} item={item} />
+                                        ))} 
+                                </Carousel>
+                            </Hidden>
+                        </Box>
+                    </StyledGrid>
+                </StyledContainer>
+            </Fade>  
+                
             {/* Main Section */}
             <StyledContainer maxWidth={false} className="container-home">
                 <StyledGrid container className="home-section">
@@ -676,7 +689,7 @@ function Home() {
                                                 sx={{height: "100%", verticalAlign: "top"}}
                                             />
                                             {/* Header Content */}
-                                            <CardContent>
+                                            <CardContent sx={{textAlign: "center"}}>
                                                 <Box
                                                     sx={{
                                                         backgroundColor: (theme) =>
@@ -864,17 +877,17 @@ function Home() {
                                                     display: "flex",
                                                     justifyContent: "center",
                                                     paddingTop: 0,
-                                                    paddingBottom: 2,
+                                                    paddingBottom: 2
                                                 }}
                                             >
-                                                <Button
-                                                    size="large"
+                                                <StyledButton
                                                     variant="outlined"
+                                                    className="button-outlined"
                                                     color="info"
                                                     sx={{
-                                                        textTransform: "capitalize",
+                                                        typography: "body2", m: 0
                                                     }}
-                                                >{`Ver más >`}</Button>
+                                                >{`Ver más >`}</StyledButton>
                                             </CardActions>
                                         </StyledCard>
                                     </StyledGrid>

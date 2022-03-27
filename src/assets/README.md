@@ -1,0 +1,1 @@
+Tendrá cualquier tipo de activos, imágenes, sonido, cualquier cosa que probablemente pueda utilizar dentro del código, cosas secundarias o de terceros que no son codigo

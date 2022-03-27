@@ -2,9 +2,18 @@ import AppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 
 const StyledAppBar = styled(AppBar)(({theme}) => ({
+    boxShadow: "none",
+    borderBottom: 0,
+    [theme.breakpoints.up("md")]: {
+        borderBottom: `3px solid ${theme.palette.info.main}`,
+    },
     "& .header__top": {
+        minHeight: "52px",
+        display: "flex",
+        alignItem: "center",
         backgroundColor: theme.palette.common.white,
         color: theme.palette.common.black,
+        // padding: `${theme.spacing(1)} 0`,
         "& .header__login": {
             display: "flex",
             alignItems: "center",
@@ -12,6 +21,9 @@ const StyledAppBar = styled(AppBar)(({theme}) => ({
             padding: 0,
             "& .header__shopping-cart": {
                 position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItem: "center",
                 "& .header__quantity-shopping-cart": {
                     padding: theme.spacing(0.25, 0.5),
                     borderRadius: "40%",
@@ -62,12 +74,30 @@ const StyledAppBar = styled(AppBar)(({theme}) => ({
         // maxHeight: "175px",
         backgroundColor: theme.palette.common.white,
         color: theme.palette.common.black,
+        position: "relative",
         "& .header__menu": {
             width: "100%",
             display: "none",
             [theme.breakpoints.up("md")]: {
                 display: "flex"
+            },
+            "& .header__item": {
+                flex: 1, 
+                listStyle: "none",
+                "& .header__sub-item": {
+                    paddingLeft: theme.spacing(4),
+                    cursor: "pointer",
+                    display: "block"
+                }
             }
+        },
+        "& .header__bottom-float": {
+            backgroundColor: theme.palette.common.white, 
+            position: "absolute", 
+            minHeight: "16vh", 
+            width: "100%", 
+            zIndex: theme.zIndex.snackbar, 
+            borderBottom: `3px solid ${theme.palette.info.main}`
         }
     },
 }));

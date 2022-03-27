@@ -201,9 +201,9 @@ function Footer() {
                 >
                     {/* Items Nav Footer Mobile */}
                     {navigationPages.slice(1).map((page) => (
-                        <>
+                        <Box key={page._id}>
                             <ListItemButton
-                                key={page._id}
+                                
                                 onClick={() => handleNavigationPages(page._id)}
                             >
                                 <StyledListItemText primary={page.label} />
@@ -227,7 +227,7 @@ function Footer() {
                                     ))}
                                 </List>
                             </Collapse>
-                        </>
+                        </Box>
                     ))}
 
                     {/* Redes Sociales */}

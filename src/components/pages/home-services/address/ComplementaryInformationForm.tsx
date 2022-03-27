@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 //!Components
@@ -8,19 +7,19 @@ import FormHeader from "./FormHeader";
 //!StyledUi
 import StyledGrid from "components/StyledUi/StyledGrid";
 import StyledInputLabel from "components/StyledUi/StyledInputLabel";
+import StyledTextField from "components/StyledUi/StyledTextField";
+import StyledSelect from "components/StyledUi/StyledSelect";
+
+
 
 //!Uuids
 import { v4 as uuid } from 'uuid';
 
 
 //!Interfaces
-import {InformacionComplementariaArgs, ChangeEventArgs} from "./HomeServicesAddress";
+import {ComplementaryInformationFormArgs} from "./interfaces";
 
 const barrios = [
-  {
-    _id: uuid(),
-    nombre: "Selecciona",
-  },
   {
     _id: uuid(),
     nombre: "Bella Suiza",
@@ -46,10 +45,6 @@ const barrios = [
 const bloques = [
   {
     _id: uuid(),
-    nombre: "Selecciona",
-  },
-  {
-    _id: uuid(),
     nombre: "Bloque",
   },
   {
@@ -59,10 +54,6 @@ const bloques = [
 ];
 
 const numerosBloqueInterior = [
-  {
-    _id: uuid(),
-    nombre: "Selecciona",
-  },
   {
     _id: uuid(),
     nombre: "1",
@@ -78,10 +69,6 @@ const numerosBloqueInterior = [
 ];
 
 const tiposDeInmueble = [
-  {
-    _id: uuid(),
-    nombre: "Selecciona",
-  },
   {
     _id: uuid(),
     nombre: "Administración",
@@ -147,15 +134,8 @@ const numerosDeInmueble = [
   }
 ];
 
-interface SuplementaryInformationFormArgs {
- handleInformacionComplementaria: ChangeEventArgs,
- estadoInformacionComplementaria1: boolean,
- estadoInformacionComplementaria2: boolean,
- informacionComplementaria: InformacionComplementariaArgs
-}
 
-
-const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInformacionComplementaria1, estadoInformacionComplementaria2, informacionComplementaria}: SuplementaryInformationFormArgs) => {
+const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoInformacionComplementaria1, estadoInformacionComplementaria2, informacionComplementaria}: ComplementaryInformationFormArgs) => {
 
   const {
     barrio,
@@ -180,16 +160,16 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
            >
              Barrio *
            </StyledInputLabel>
-           <TextField
+           <StyledSelect
              id="barrio"
-             select
              value={barrio}
-             onChange={(e) =>
-               handleInformacionComplementaria(e)
-             }
+             onChange={handleInformacionComplementaria}
              name="barrio"
-             style={{ width: "100%" }}
+             displayEmpty={true}
            >
+              <MenuItem value="" selected disabled>
+                  Selecciona
+              </MenuItem>
              {barrios.map((barrio) => (
                <MenuItem
                  key={barrio._id}
@@ -198,8 +178,9 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
                  {barrio.nombre}
                </MenuItem>
              ))}
-           </TextField>
+           </StyledSelect>
          </StyledGrid>
+
          {/* Bloque o Interior */}
          <StyledGrid item xs={6} sm={3}>
            <StyledInputLabel
@@ -207,16 +188,17 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
            >
              Bloque o interior *
            </StyledInputLabel>
-           <TextField
+           <StyledSelect
              id="bloqueInterior"
-             select
              value={bloqueInterior}
-             onChange={(e) =>
-               handleInformacionComplementaria(e)
-             }
+             onChange={handleInformacionComplementaria}
              name="bloqueInterior"
-             style={{ width: "100%" }}
+             displayEmpty={true}
+
            >
+              <MenuItem value="" selected disabled>
+                Selecciona
+              </MenuItem>
              {bloques.map((bloque) => (
                <MenuItem
                  key={bloque._id}
@@ -225,8 +207,9 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
                  {bloque.nombre}
                </MenuItem>
              ))}
-           </TextField>
+           </StyledSelect>
          </StyledGrid>
+
          {/* Numero Bloque o Interior */}
          <StyledGrid item xs={6} sm={3}>
            <StyledInputLabel
@@ -234,16 +217,16 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
            >
              Número *
            </StyledInputLabel>
-           <TextField
+           <StyledSelect
              id="numeroBloqueInterior"
-             select
              value={numeroBloqueInterior}
-             onChange={(e) =>
-               handleInformacionComplementaria(e)
-             }
+             onChange={handleInformacionComplementaria}
              name="numeroBloqueInterior"
-             style={{ width: "100%" }}
+             displayEmpty={true}
            >
+              <MenuItem value="" selected disabled>
+                Selecciona
+              </MenuItem>
              {numerosBloqueInterior.map((numero) => (
                <MenuItem
                  key={numero._id}
@@ -252,7 +235,7 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
                  {numero.nombre}
                </MenuItem>
              ))}
-           </TextField>
+           </StyledSelect>
          </StyledGrid>
        </>
      )}
@@ -265,16 +248,18 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
            >
              Tipo de Inmueble *
            </StyledInputLabel>
-           <TextField
+           <StyledSelect
              id="tipoInmueble"
-             select
              value={tipoInmueble}
              onChange={(e) =>
                handleInformacionComplementaria(e)
              }
              name="tipoInmueble"
-             style={{ width: "100%" }}
+             displayEmpty={true}
            >
+              <MenuItem value="" selected disabled>
+                Selecciona
+              </MenuItem>
              {tiposDeInmueble.map((tipo) => (
                <MenuItem
                  key={tipo._id}
@@ -283,7 +268,7 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
                  {tipo.nombre}
                </MenuItem>
              ))}
-           </TextField>
+           </StyledSelect>
          </StyledGrid>
          {/* Numero de Tipo de Inmueble */}
          <StyledGrid item xs={6} sm={3}>
@@ -292,16 +277,18 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
            >
              Número *
            </StyledInputLabel>
-           <TextField
+           <StyledSelect
              id="numeroTipoInmueble"
-             select
              value={numeroTipoInmueble}
              onChange={(e) =>
                handleInformacionComplementaria(e)
              }
              name="numeroTipoInmueble"
-             style={{ width: "100%" }}
+             displayEmpty={true}
            >
+              <MenuItem value="" selected disabled>
+                Selecciona
+              </MenuItem>
              {numerosDeInmueble.map((numero) => (
                <MenuItem
                  key={numero._id}
@@ -310,7 +297,7 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
                  {numero.nombre}
                </MenuItem>
              ))}
-           </TextField>
+           </StyledSelect>
          </StyledGrid>
          {/* Si el numero de tipo de inmueble es otro */}
          {numeroTipoInmueble === "Otro" && (
@@ -320,7 +307,7 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
              >
                Otro - Cuál? *
              </StyledInputLabel>
-             <TextField
+             <StyledTextField
                error
                id="inmuebleOtro"
                value={inmuebleOtro}
@@ -328,8 +315,7 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
                  handleInformacionComplementaria(e)
                }
                name="inmuebleOtro"
-               style={{ width: "100%" }}
-             ></TextField>
+             ></StyledTextField>
            </StyledGrid>
          )}
        </>
@@ -341,20 +327,19 @@ const SuplementaryInformationForm = ({handleInformacionComplementaria, estadoInf
        >
          Información adicional para tu instalación:
        </StyledInputLabel>
-       <TextField
+       <StyledTextField
          id="informacionAdicional"
          value={informacionAdicional}
          onChange={(e) =>
            handleInformacionComplementaria(e)
          }
          name="informacionAdicional"
-         style={{ width: "100%" }}
          helperText="Ej. Vereda la Estancia"
-       ></TextField>
+       ></StyledTextField>
      </StyledGrid>
    </StyledGrid>
   </Box>
  )
 }
 
-export default SuplementaryInformationForm
+export default ComplementaryInformationForm

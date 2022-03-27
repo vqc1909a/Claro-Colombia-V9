@@ -1,4 +1,4 @@
-import {useState, Fragment} from "react";
+import React, {useState, Fragment, useEffect, useRef} from "react";
 import {styled} from "@mui/material/styles";
 
 import Box from "@mui/material/Box";
@@ -14,6 +14,10 @@ import Grow from "@mui/material/Grow";
 import InputBase from "@mui/material/InputBase";
 import Hidden from "@mui/material/Hidden";
 import ListItemButton from "@mui/material/ListItemButton";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
+
 
 //! Icons
 import MenuIcon from "@mui/icons-material/Menu";
@@ -33,6 +37,8 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Divider from "@mui/material/Divider";
 import Collapse from "@mui/material/Collapse";
+import Fade from "@mui/material/Fade";
+
 
 //! Styled UI Components
 import StyledContainer from "components/StyledUi/StyledContainer";
@@ -41,11 +47,25 @@ import StyledImage from "components/StyledUi/StyledImage";
 import StyledAppBar from "components/StyledUi/StyledAppBar";
 
 
+//! Redux;
+import useAppSelector from "utils/hooks/useAppSelector";
+import useAppDispatch from "utils/hooks/useAppDispatch";
+
+//! Selectors
+import * as USER_SELECTORS from "redux/selectors/user";
+
+//!Actions
+import * as USER_ACTIONS from "redux/actions/user";
+
+
 //! React Router dom
-import {Link as RouterLink, useNavigate} from "react-router-dom";
+import {Link as RouterLink, useNavigate, useLocation} from "react-router-dom";
 
 //! Uuids
 import { v4 as uuid } from 'uuid';
+import { getLoggedUser } from "api/services/user";
+
+
 
 //! Interfaces
 type IconsNavigationInterface = {
@@ -60,10 +80,8 @@ const IconsNavigation: IconsNavigationInterface = {
     "HomeOutlinedIcon": <HomeOutlinedIcon fontSize="medium"></HomeOutlinedIcon>
 }
 
-
-
 //! Navigation Pages
-const NavigationPages = [
+const NavigationPagesDefault = [
     {
         _id: uuid(),
         label: "Categorías",
@@ -172,17 +190,95 @@ const NavigationPages = [
     },
 ];
 
+
+//! Evento de renderizado de ancho
+let sizeWidth: number = 0;
+
 function Header() {
     const [stateDrawer, setStateDrawer] = useState(false);
-    const [navigationPages, setNavigationPages] = useState(NavigationPages);
+    const [navigationPages, setNavigationPages] = useState(NavigationPagesDefault);
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     let navigate = useNavigate();
+    let dispatch = useAppDispatch();
+
+    //!Selectors
+    const isLogged = useAppSelector(USER_SELECTORS.selectIsLogged);
+    const user = useAppSelector(USER_SELECTORS.selectUser);
+    
+    //! Refs Dom
+    const headerRef = useRef<HTMLDivElement | any>(null);
 
     //!Functions
     const handleNavigationPages = (_id: string): void => {
         const newNavigationPages = navigationPages.map((page) => page._id === _id ? {...page, status: !page.status} : {...page, status: false})
         setNavigationPages(newNavigationPages)
     }
+
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+
+        setOpenSnackbar(false);
+    };
+
+    const handleCloseFooterBottomFloat = () => {
+        setNavigationPages(NavigationPagesDefault)
+    }
+
+    const reportWindowSize = () => {
+        sizeWidth = window.innerWidth;
+    }
+    window.addEventListener('resize', reportWindowSize);
+
+    //! Effects
+    useEffect((): any => {
+        if (!isLogged) return null;
+        setOpenSnackbar(true);
+    }, [isLogged])
+
+    useEffect((): any => {
+        const token: any = localStorage.getItem('token');
+        if (!token) return null;
+        ( async () => {
+            try{
+                dispatch(USER_ACTIONS.GET_LOGGED_USER_REQUESTED_ACTION({}));
+                const {data} = await getLoggedUser({token});
+                dispatch(USER_ACTIONS.GET_USER_LOGGED_SUCCESS_ACTION({...data[0]}));
+            }catch(err: any){
+                const {data} = err.response;
+                dispatch(USER_ACTIONS.GET_USER_LOGGED_ERROR_ACTION({message: data}));
+            }
+        })();
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        document.addEventListener('click', (e) => {
+            let isClickInsideElement = headerRef.current.contains(e.target);
+            if (sizeWidth > 1024 && !isClickInsideElement) {
+                setNavigationPages(NavigationPagesDefault);
+            }
+        })
+    }, [])
+
+    //!No show Header Component if pathname is /login
+    let location = useLocation();
+    if (location.pathname === "/login"){
+        return null;
+    }
+    
+
+
+    //!Alert Component
+    const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+    ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (
@@ -205,7 +301,7 @@ function Header() {
             onKeyDown={toggleDrawer(false)}
         >
             {/* Blank Header */}
-            <Box sx={{minHeight: "50px"}}></Box>
+            <Box sx={{minHeight: "52px"}}></Box>
 
             {/* Header Mobile */}
             <StyledContainer
@@ -228,7 +324,7 @@ function Header() {
                     </IconButton>
 
                     {/* Claro Logo Image   */}
-                    <Link component={RouterLink} to="/" sx={{ width: "80px", marginBottom: (theme) => theme.spacing(1), mr: "auto"}}>
+                    <Link component={RouterLink} to="/" sx={{ width: "80px", marginBottom: (theme) => theme.spacing(1), mr: "auto"}} onClick={handleCloseFooterBottomFloat}>
                         <StyledImage
                             src="/icons/claroperulogo.svg"
                             alt="claro-peru-logo"
@@ -255,6 +351,7 @@ function Header() {
                 }}
                 component="nav"
                 aria-labelledby="nested-list-subheader"
+                className="header-mobile"
                 // subheader={
                 //   <ListSubheader component="div" id="nested-list-subheader">
                 //     Persona
@@ -263,7 +360,7 @@ function Header() {
             >
                 {/* Items Nav Header Mobile */}
                 {navigationPages.slice(1).map((page) => (
-                    <>
+                    <Box key={page._id}>
                         <ListItemButton
                             key={page._id}
                             onClick={() => handleNavigationPages(page._id)}
@@ -289,7 +386,7 @@ function Header() {
                             </List>
                             <Divider />
                         </Collapse>
-                    </>
+                    </Box>
                 ))}
 
                 {/* Mis Pedidos */}
@@ -366,6 +463,7 @@ function Header() {
     }));
     //!--------------------------
     
+    
     return (
     <>
         <div>
@@ -382,8 +480,16 @@ function Header() {
                 </Fragment>
             ))}
         </div>
+
+        {/* SnackBar */}
+        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                ¡Bienvenido {user.name}! 
+            </Alert>
+        </Snackbar>
+
         {/* Header */}
-        <StyledAppBar position="sticky" className="header">
+        <StyledAppBar position="sticky" className="header" ref={headerRef}>
             {/* Header Top */}
             <Box className="header__top">
                 <StyledContainer maxWidth={false} sx={{display: "flex"}}>
@@ -399,10 +505,16 @@ function Header() {
                         <PersonOutlineOutlinedIcon fontSize="large"></PersonOutlineOutlinedIcon>
 
                         {/* Login Action */}
-                        <ListItemText onClick={() => {}}>
+                        <ListItemText onClick={() => navigate("/login")} sx={{cursor: "pointer"}}>
+                            {isLogged ? 
+                            <Typography variant="body2">
+                                 Mi Cuenta
+                            </Typography>
+                            :
                             <Typography variant="body2">
                                 Iniciar<br></br> Sesión
                             </Typography>
+                            }
                         </ListItemText>
                         
                         {/* Line Icon */}
@@ -416,10 +528,16 @@ function Header() {
                         ></MaximizeOutlinedIcon>
 
                         {/* Check-In Action */}
-                        <ListItemText onClick={() => {}} sx={{mr: 1}}>
+                        <ListItemText onClick={() => {}} sx={{mr: 1.5}}>
+                            {isLogged ?
+                            <Typography variant="body2">
+                                ¡Hola {user.name}!
+                            </Typography>
+                            :
                             <Typography variant="body2">
                                 Crear<br></br> Cuenta
                             </Typography>
+                            }
                         </ListItemText>
                         
                         {/* Shopping-Cart Action */}
@@ -455,7 +573,7 @@ function Header() {
                     </Hidden>
 
                     {/* Claro Logo Image  */}
-                    <Link component={RouterLink} to="/" underline="none" className="header__logo" >
+                    <Link component={RouterLink} to="/" underline="none" className="header__logo" onClick={handleCloseFooterBottomFloat} >
                         <StyledImage
                             src="/icons/claroperulogo.svg"
                             alt="claro-peru-logo"
@@ -525,16 +643,18 @@ function Header() {
             <Hidden mdDown>
                 <Box className="header__bottom">
                     <StyledContainer maxWidth="md">
-                        {/* Items del Menu */}
+                        {/* Lista de Items */}
                         <List
                             className="header__menu"
                             component="nav"
+                            sx={{position: "relative"}}
                         >
                             {navigationPages.map((page) => (
+                                // Items del Menú
                                 <Box
                                     key={page._id}
                                     component="li"
-                                    sx={{flex: 1, listStyle: "none"}}
+                                    className="header__item"
                                 >
                                     <Button
                                         sx={{
@@ -564,11 +684,13 @@ function Header() {
                                         in={page.status}
                                         style={{
                                             transformOrigin: "center top",
+                                            position: "absolute",
+                                            zIndex: 1500
                                         }}
                                         {...(page.status
                                             ? {timeout: 600}
                                             : {})}
-                                        unmountOnExit
+                                        
                                     >
                                         <List
                                             component="div"
@@ -583,12 +705,9 @@ function Header() {
                                                         to={subCategory.link}
                                                         underline="hover"
                                                         color="inherit"
-                                                        sx={{
-                                                            pl: 4,
-                                                            cursor: "pointer",
-                                                            display: "block"
-                                                        }}
+                                                        className="header__sub-item"
                                                         key={subCategory.label}
+                                                        onClick={handleCloseFooterBottomFloat}
                                                     >
                                                         {subCategory.label}
                                                     </Link>
@@ -600,6 +719,18 @@ function Header() {
                             ))}
                         </List>
                     </StyledContainer>
+
+                    {/* Header Bottom Float */}
+                    <Fade
+                        in={navigationPages.some(page => page.status === true)}
+                        timeout={600}
+                        
+                    > 
+                        <Box className="header__bottom-float">
+                        </Box>
+                    </Fade >
+                 
+                   
                 </Box>
             </Hidden>
         </StyledAppBar>

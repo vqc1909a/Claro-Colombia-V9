@@ -2,9 +2,7 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 
 const StyledContainer = styled(Container)(({theme}) => ({
- // Por defecto el padding a los alterales es de 24px
- paddingLeft: "1rem", 
- paddingRight: "1rem",
+ // Por defecto el padding a los laterales es de 24px 
  [theme.breakpoints.down('sm')]: {
   "&.container-hero": {
    paddingLeft: 0, 

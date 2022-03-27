@@ -1,0 +1,12 @@
+//Login
+//! Home Service Plans
+export const CART_ADD_ITEM = "CART_ADD_ITEM";
+export const CART_ADD_ITEMS = "CART_ADD_ITEMS";
+export const CART_SAVE_SHIPPING_ADDRESS = "CART_SAVE_SHIPPING_ADDRESS";
+
+export const RESET_CART = "RESET_CART";
+export const UPDATE_NUMBER_PACKAGES_CART = "UPDATE_NUMBER_PACKAGES_CART";
+
+
+
+

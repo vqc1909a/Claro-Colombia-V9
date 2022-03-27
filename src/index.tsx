@@ -8,7 +8,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import {ThemeProvider, createTheme, responsiveFontSizes} from "@mui/material/styles";
 import {StyledEngineProvider} from "@mui/material/styles";
 import {BrowserRouter} from "react-router-dom";
-
+import { Provider } from "react-redux";
+import {store} from "redux/store";
 
 let theme = responsiveFontSizes(
   createTheme({
@@ -37,22 +38,37 @@ let theme = responsiveFontSizes(
     },
     typography: {
       h4: {
-        fontSize: "2.325rem"
+        fontSize: "2.3rem"
+      },
+      h6: {
+        fontSize: "1.15rem"
+      },
+      overline: {
+        fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+        fontWeight: 400,
+        fontSize: "0.6rem",
+        lineHeight: 1.66,
+        letterSpacing: "0.03333em",
+        textTransform: "capitalize"
       }
-    }
+    }    
   })
 );
 
+
+//!Aqui puede ir el suspense con normalidad y el renderizado de cada pagina sería lo mismo si el suspense va aqui o en las rutas, la ventaja es lo visual en las rutas de poner suspense en cada uno de ellas.
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <App />
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <App />
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

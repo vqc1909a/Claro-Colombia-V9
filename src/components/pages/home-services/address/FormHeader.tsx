@@ -1,14 +1,11 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-export interface FormHeaderArgs {
-  number: number,
-  description: string
-}
+import {FormHeaderArgs} from "./interfaces";
 
 const FormHeader = ({number, description}: FormHeaderArgs) => (
   <Typography
-    variant="body2"
+    variant="body1"
     component="p"
     sx={{
       display: "flex",
@@ -25,9 +22,10 @@ const FormHeader = ({number, description}: FormHeaderArgs) => (
           `3px solid ${theme.palette.primary.main}`,
         borderRadius: "50%",
         color: (theme) => theme.palette.primary.main,
-        fontSize: "1.5rem",
+        typography: "h5",
+        fontWeight: "bolder",
         mr: 1,
-        px: 1.25
+        px: 1
       }}
     >
       {number}

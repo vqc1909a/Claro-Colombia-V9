@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import { styled } from "@mui/material/styles";
 
 //!Componentes
@@ -10,101 +9,111 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Hidden from "@mui/material/Hidden";
 
+//! Mui Components
+import StyledImage from "components/StyledUi/StyledImage";
+import StyledButton from "components/StyledUi/StyledButton";
 
-interface CardTwo {
-  item: {
-    subcategory: string,
-    image: string,
-    idImage: string,
-    benefits: string[],
-    comboPrice: number,
-    isActive: boolean,
-    _id: string,
-    category: string,
-    plan: string,
-    unitPrice: number,
-    createdAt: string,
-    updatedAt: string
-  }
-}
+
+//!React Redux
+import useAppDispatch from "utils/hooks/useAppDispatch";
+
+//! Actions
+import * as PLANS_ACTIONS from "redux/actions/homeServicesPlans";
+
+//! Interfaces
+import {CardTwo} from "./interfaces";
+import CardActions from "@mui/material/CardActions";
 
 function HomeServicesPlansCardTwo({ item }: CardTwo) {
-  const [cardIsSelected, setCardIsSelected] = useState(false);
-  const {subcategory, plan, image, unitPrice} = item;
+  const dispatch = useAppDispatch();
+  const {_id, subcategory, plan, image, unitPrice, isSelected} = item;
 
   const StyledCard = styled(Card)(({ theme }) => ({
-    borderWidth: `${cardIsSelected ? "2px" : "1px"}`,
+    borderWidth: `${isSelected ? "2px" : "1px"}`,
     borderStyle: "solid",
     borderColor: `${
-      cardIsSelected ? theme.palette.primary.main : theme.palette.grey["500"]
+      isSelected ? theme.palette.primary.main : theme.palette.grey["500"]
     }`,
-    borderRadius: "10px",
+    borderRadius: "8px",
     borderTop: `5px solid ${
-      cardIsSelected ? theme.palette.primary.main : theme.palette.grey["500"]
+      isSelected ? theme.palette.primary.main : theme.palette.grey["500"]
     }`,
     backgroundColor: theme.palette.grey["50"],
     position: "relative",
-    cursor: `${cardIsSelected ? "initial" : "pointer"}`,
-    " .card-megas": {
-      color: `${cardIsSelected ? theme.palette.primary.main : "initial"}`
-    },
+    cursor: `${isSelected ? "initial" : "pointer"}`,
     "&:hover": {
       borderColor: theme.palette.primary.main,
       backgroundColor: `${
-        cardIsSelected ? theme.palette.grey["50"] : theme.palette.common.white
-      }`,
-      " .card-megas": {
-        color: theme.palette.primary.main
+        isSelected ? theme.palette.grey["50"] : theme.palette.common.white
+      }`
+    },
+    "& .MuiCardContent-root": {
+      padding: theme.spacing(2.5),
+      "& .card__image": {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+        height: "60px",
+        [theme.breakpoints.up("sm")]: {
+          height: "70px"
+        },
+        [theme.breakpoints.up("md")]: {
+          height: "80px"
+        },
+        img: {
+          width: "100%",
+          [theme.breakpoints.up("sm")]: {
+            width: "80%",
+          },
+          [theme.breakpoints.up("md")]: {
+            width: "75%"
+          }
+        }
+        // height: "80px"
       }
     },
-    "& .card-footer": {
+    "& .MuiCardActions-root": {
+      padding: theme.spacing(2.5),
       borderTop: `2px dashed ${theme.palette.grey["400"]}`,
-      paddingTop: theme.spacing(2),
-      display: "flex",
-      alignItems: "flex-start",
-      justifyContent: "space-around"
-    },
-    "& .card-footerSpecial": {
-      borderTop: `2px dashed ${theme.palette.grey["400"]}`,
-      paddingTop: theme.spacing(2),
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    },
-    "& .card-image": {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "80px"
-    },
-    "& .card-quantity": {
-      borderTop: `2px solid ${theme.palette.grey["400"]}`,
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(2),
-      "& .card-quantity-numbers": {
+      display: "block",
+      marginBottom: theme.spacing(1),
+      "& .card__prices": {
+        width: "100%",
         display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "space-around",
-        marginBottom: theme.spacing(2)
+        "&.card__prices--one": {
+            alignItems: "flex-start",
+            justifyContent: "space-around",
+        },
+        "&.card__prices--two": {
+            alignItems: "center",
+            justifyContent: "center"
+        }
+      },
+      "& .card__button": {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: theme.spacing(2),
       }
     }
   }));
+
+  //! Functions
+  const handleSelect = (): void => {
+      dispatch(PLANS_ACTIONS.TOGGLE_SELECTED_HOME_SERVICES_PLANS_ACTION({id: _id}))
+  }
 
   return (
     <Grid item xs={6} sm={4} md={3}>
       <StyledCard
         variant="outlined"
-        onClick={() => (cardIsSelected ? {} : setCardIsSelected(true))}
+        onClick={() => (isSelected ? {} : handleSelect())}
       >
-        <CardContent
-          sx={(theme) => ({
-            padding: theme.spacing(2.5)
-          })}
-        >
-          <Box mb={2}>
+        <CardContent>
             <Typography
               variant="subtitle1"
               component="h6"
@@ -112,20 +121,18 @@ function HomeServicesPlansCardTwo({ item }: CardTwo) {
             >
               {subcategory}
             </Typography>
-            <Box className="card-image">
-              <Box
-                component="img"
+            <Box className="card__image">
+              <StyledImage
                 alt={plan}
                 src={image}
                 loading="lazy"
-                sx={{
-                  width: { xs: "100%", sm: "80%" },
-                  height: { xs: "60px", sm: "70px" },
-                  verticalAlign: "top"
-                }}
-              ></Box>
+                // sx={{
+                //   width: { xs: "100%", sm: "80%" },
+                //   height: { xs: "60px", sm: "70px" },
+                // }}
+              ></StyledImage>
             </Box>
-            {cardIsSelected ? (
+            {isSelected ? (
               <CheckCircleIcon
                 fontSize="large"
                 sx={(theme) => ({
@@ -146,8 +153,10 @@ function HomeServicesPlansCardTwo({ item }: CardTwo) {
                 })}
               ></CheckCircleOutlinedIcon>
             )}
-          </Box>
-          <Box className="card-footerSpecial">
+        </CardContent>
+        <CardActions>
+          <Box className="card__footer">
+            <Box className="card__prices card__prices--two">
             <Box
               sx={{
                 display: "flex",
@@ -180,7 +189,7 @@ function HomeServicesPlansCardTwo({ item }: CardTwo) {
                   component="span"
                   sx={(theme) => ({
                     color: `${
-                      cardIsSelected ? "initial" : theme.palette.grey["500"]
+                      isSelected ? "initial" : theme.palette.grey["500"]
                     }`
                   })}
                 >
@@ -188,32 +197,25 @@ function HomeServicesPlansCardTwo({ item }: CardTwo) {
                 </Typography>
               </Hidden>
             </Box>
-          </Box>
-          {/* Boton */}
-          {cardIsSelected && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                pt: 2
-              }}
-            >
-              <Button
-                variant="outlined"
-                size="medium"
-                color="info"
-                sx={{
-                  textTransform: "capitalize",
-                  backgroundColor: (theme) => theme.palette.common.white
-                }}
-                onClick={() => setCardIsSelected(false)}
-              >
-                Quitar Selección
-              </Button>
             </Box>
-          )}
-        </CardContent>
+            {/* Boton */}
+            {isSelected && (
+              <Box className="card__button">
+                <StyledButton
+                  variant="outlined"
+                  className="button-outlined"
+                  color="info"
+                  sx={{
+                      typography: "body2", m: 0
+                  }}
+                  onClick={() => handleSelect()}
+                >
+                  Quitar Selección
+                </StyledButton>
+              </Box>
+            )}
+          </Box>
+        </CardActions>
       </StyledCard>
     </Grid>
   );

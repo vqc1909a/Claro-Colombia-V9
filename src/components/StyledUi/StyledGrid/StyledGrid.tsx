@@ -10,18 +10,7 @@ const StyledGrid = styled(Grid)(({theme}) => ({
         },
         "& .hero__content": {
             width: "100%",
-            height: "60vh",
-            paddingBottom: theme.spacing(1),
-            [theme.breakpoints.up("sm")]: {
-                height: "65vh",
-                paddingTop: theme.spacing(3),
-                paddingBottom: theme.spacing(3),
-            },
-            [theme.breakpoints.up("md")]: {
-                height: "70vh",
-                paddingTop: theme.spacing(5),
-                paddingBottom: theme.spacing(5),
-            },
+            height: "100%"
         },
     },
 
