@@ -1,4 +1,4 @@
-import {RootReducerState} from "../reducers";
+import {RootReducerState} from "../store";
 
 export const selectIsLogged = (state: RootReducerState) => {
  return state.user.isLogged 

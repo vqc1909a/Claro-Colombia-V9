@@ -1,4 +1,4 @@
-import rootReducer from "../reducers";
+import rootReducer from "../slices";
 import {configureStore} from "@reduxjs/toolkit";
 
 export const store = configureStore({
@@ -6,7 +6,7 @@ export const store = configureStore({
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootReducerState = ReturnType<typeof store.getState>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
 

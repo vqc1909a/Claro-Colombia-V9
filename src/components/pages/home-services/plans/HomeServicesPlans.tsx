@@ -42,7 +42,8 @@ import LoaderPage from "components/widgets/LoaderPage";
 import useScrollToTop from "utils/hooks/useScrollToTop";
 
 //!Interfaces
-import {TabPanelProps, Plan} from "./interfaces";
+import {TabPanelProps} from "./interfaces";
+import {Plan} from "redux/slices/reducerStateInterface";
 
 //! React Router Dom
 import {Link as RouterLink, useNavigate} from "react-router-dom";
@@ -55,8 +56,8 @@ import useAppDispatch from "utils/hooks/useAppDispatch";
 import useAppSelector from "utils/hooks/useAppSelector";
 
 //! Actions
-import * as PLANS_ACTIONS from "redux/actions/homeServicesPlans";
-import * as CART_ACTIONS from "redux/actions/cart";
+import * as PLANS_ACTIONS from "redux/slices/homePlans";
+import * as CART_ACTIONS from "redux/slices/cart";
 
 
 //! Selectors
@@ -104,12 +105,12 @@ function HomeServicesPlans() {
    
     //! Functions
     const handleResetPlans = () => {
-        dispatch(PLANS_ACTIONS.RESET_SELECTED_HOME_SERVICES_PLANS_ACTION({}));
-        dispatch(CART_ACTIONS.RESET_CART_ACTION({}));
+        dispatch(PLANS_ACTIONS.resetSelectedHomePlans());
+        dispatch(CART_ACTIONS.resetItems());
     }
 
     const handleQuoteSummary = () => {
-        sessionStorage.setItem("homeServicesPlans", JSON.stringify(plans));
+        sessionStorage.setItem("homePlans", JSON.stringify(plans));
         navigate("/servicios-hogar-cotizacion")
     }
 
@@ -121,14 +122,13 @@ function HomeServicesPlans() {
         if (plans.length) return null;
         (async () => {
             try{
-                dispatch(PLANS_ACTIONS.GET_HOME_SERVICES_PLANS_REQUEST_ACTION({}))
+                dispatch(PLANS_ACTIONS.getHomePlansRequest());
                 const {data} = await getPlans();
-                const plans: Plan[] = data;
-                const newPlans = plans.map(plan => ({...plan, isSelected: false}))  
-                dispatch(PLANS_ACTIONS.GET_HOME_SERVICES_PLANS_SUCCESS_ACTION(newPlans))
+                const plans = (data as Plan[]).map(plan => ({...plan, isSelected: false}))  
+                dispatch(PLANS_ACTIONS.getHomePlansSuccess(plans))
             }catch(err: any){
                 const {data} = err.response;
-                dispatch(PLANS_ACTIONS.GET_HOME_SERVICES_PLANS_ERROR_ACTION({message: data}));
+                dispatch(PLANS_ACTIONS.getHomePlansError({message: data}));
             }
         })();
         //eslint-disable-next-line
@@ -137,7 +137,7 @@ function HomeServicesPlans() {
     //!Actualizar los planes seleccionados
     useEffect((): any => {
         const selectedPlans = plans.filter(plan => plan.isSelected);
-        dispatch(PLANS_ACTIONS.GET_SELECTED_HOME_SERVICES_PLANS_ACTION(selectedPlans));
+        dispatch(PLANS_ACTIONS.getSelectedHomePlans(selectedPlans));
         //eslint-disable-next-line
     }, [plans])
 

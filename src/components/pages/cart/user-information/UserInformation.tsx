@@ -56,7 +56,7 @@ interface PersonalDataState {
 
 
 
-function PersonalInformation(){
+function UserInformation(){
     let plans = useAppSelector(CARD_SELECTORS.selectItems);
     let plansPrice = useAppSelector(CARD_SELECTORS.selectItemsPrice);
     let taxPrice = useAppSelector(CARD_SELECTORS.selectTaxPrice);
@@ -406,4 +406,4 @@ function PersonalInformation(){
     );
 };
 
-export default PersonalInformation;
+export default UserInformation;

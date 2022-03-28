@@ -32,7 +32,7 @@ import useScrollToTop from "utils/hooks/useScrollToTop";
 import {InformacionComplementariaArgs, InformacionBasicaArgs, ChangeEventArgs} from "./interfaces";
 
 //!Actions
-import * as CART_ACTIONS from "redux/actions/cart";
+import * as CART_ACTIONS from "redux/slices/cart";
 
 //!React Redux;
 import useAppDispatch from "utils/hooks/useAppDispatch";
@@ -117,7 +117,7 @@ function HomeServicesAddress() {
     const handleShippingAddress = () => {
         //!Guardar dirección en carrito de compra
         let findShippingAddress: ShippingAddressProps | any = shippingAddresses.find(({address}) => shippingAddress.includes(address));
-        dispatch(CART_ACTIONS.CART_SAVE_SHIPPING_ADDRESS_ACTION({
+        dispatch(CART_ACTIONS.saveShippingAddress({
             address: shippingAddress,
             price: findShippingAddress.price,
             isFree: findShippingAddress.isFree

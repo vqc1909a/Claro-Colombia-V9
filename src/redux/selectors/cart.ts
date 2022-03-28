@@ -1,4 +1,4 @@
-import {RootReducerState} from "../reducers";
+import {RootReducerState} from "../store";
 import {ShippingAddress} from "../reducers/reducerStateInterface";
 
 export const selectItems = (state: RootReducerState): any[]  => {

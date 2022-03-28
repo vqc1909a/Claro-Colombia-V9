@@ -20,7 +20,7 @@ import StyledButton from "components/StyledUi/StyledButton";
 import useAppDispatch from "utils/hooks/useAppDispatch";
 
 //! Actions
-import * as PLANS_ACTIONS from "redux/actions/homeServicesPlans";
+import * as PLANS_ACTIONS from "redux/slices/homePlans";
 
 //! Interfaces
 import {CardTwo} from "./interfaces";
@@ -104,7 +104,8 @@ function HomeServicesPlansCardTwo({ item }: CardTwo) {
 
   //! Functions
   const handleSelect = (): void => {
-      dispatch(PLANS_ACTIONS.TOGGLE_SELECTED_HOME_SERVICES_PLANS_ACTION({id: _id}))
+      //!Actualizar el seleccionado de un plan
+      dispatch(PLANS_ACTIONS.toggleSelectedHomePlan(_id))
   }
 
   return (

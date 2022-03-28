@@ -30,7 +30,7 @@ import useForm from "utils/hooks/useForm";
 import useScrollToTop from "utils/hooks/useScrollToTop";
 
 //!Actions
-import * as USER_ACTIONS from "redux/actions/user";
+import * as USER_ACTIONS from "redux/slices/user";
 
 //!Services
 import * as USER_SERVICES from "api/services/user";
@@ -45,7 +45,6 @@ function Login(){
     const isError = useSelector(USER_SELECTORS.selectIsError);
     const message = useSelector(USER_SELECTORS.selectMessage);
 
-
     const {email, password, form, handleChange} = useForm<FormLoginProps>({
         email: "",
         password: ""
@@ -56,29 +55,17 @@ function Login(){
         
         let user = form;        
         try{
-            dispatch(USER_ACTIONS.USER_LOGIN_REQUEST_ACTION({}));
+            dispatch(USER_ACTIONS.loginRequest());
             const {data} = await USER_SERVICES.loginUser({user});
-            localStorage.setItem('token', JSON.stringify(data.accessToken));
-
-            // {
-            //     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsImlhdCI6MTY0Njk3NTYxOSwiZXhwIjoxNjQ2OTc5MjE5LCJzdWIiOiIxIn0.aU3rBuKbcaTeW0EMx39B5b7RwvyImq73RlPVFORIric",
-            //     "user": {
-            //         "email": "user1@gmail.com",
-            //         "name": "user1",
-            //         "id": 1
-            //     }
-            // }
-
-            dispatch(USER_ACTIONS.USER_LOGIN_SUCCESS_ACTION({...data}));
+            dispatch(USER_ACTIONS.loginSuccess({...data}));
 
             //! Verificar si hay planes de servicios hogar y redirigir al carrito, caso contrario redirigir al home, no olvidar cuando cierrres sesión eliminara este key del storage
-            let isHomeServicesPlans: boolean = sessionStorage.getItem("homeServicesPlans") ? true : false;
-            return !isHomeServicesPlans ? navigate("/") : navigate("/carrito-de-compras") 
+            let isHomeServicesPlans: boolean = sessionStorage.getItem("homePlans") ? true : false;
+            return !isHomeServicesPlans ? navigate("/") : navigate("/cart") 
 
         }catch(err: any){
             const {data} = err.response;
-            localStorage.removeItem('token');
-            dispatch(USER_ACTIONS.USER_LOGIN_ERROR_ACTION({message: data}));
+            dispatch(USER_ACTIONS.loginError({message: data}));
         }
 
     }

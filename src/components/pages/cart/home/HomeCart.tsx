@@ -9,6 +9,7 @@ function HomeCart() {
     let navigate = useNavigate();
     let [numberStep, setNumberStep] = useState<number>(1);
 
+
     console.log("Ejecutando Outlet del cart");
     let component = pathname !== "/cart" ? <StepperHeader numberStep={numberStep - 1}/> : "";
 

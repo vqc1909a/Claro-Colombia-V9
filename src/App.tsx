@@ -33,7 +33,7 @@ const Login = lazy(() => import("components/pages/login"));
 
 const ShoppingCart = lazy(() => import("components/pages/cart/shopping-cart"));
 
-const PersonalInformation = lazy(() => import("components/pages/cart/personal-information"));
+const UserInformation = lazy(() => import("components/pages/cart/user-information"));
 
 
 function App() {
@@ -99,10 +99,10 @@ function App() {
                                 }
                             ></Route>
                             <Route
-                                path="personal-information"
+                                path="user-information"
                                 element={
                                         <Suspense fallback={<LoaderPage></LoaderPage>}>
-                                            <PersonalInformation></PersonalInformation>
+                                            <UserInformation></UserInformation>
                                         </Suspense>
                                 }
                             ></Route>

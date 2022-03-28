@@ -15,7 +15,7 @@ const cartReducer = createReducer(initStates.cart, (builder) => {
         .addCase(
             ACTIONS.CART_ADD_ITEM_ACTION,
             (state: CartReducerState, action: AnyAction) => {
-                console.log("Añadir Productos al carrito")
+                console.log("Añadir Producto al carrito")
             }
         )
         .addCase(

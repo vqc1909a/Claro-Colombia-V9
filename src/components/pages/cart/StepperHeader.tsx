@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-
+import Hidden from '@mui/material/Hidden';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -36,27 +36,27 @@ const stepIcons: {[index: string]: React.ReactElement} = {
 const steps = [
     {
         _id: uuid(),
-        label: <Box component="span" sx={{fontWeight: "bolder"}}>Carrito</Box>
+        label: <Box component="div" sx={{typography: {xs: "h5", md: "body2"}}} style={{fontWeight: "bolder"}}>Carrito</Box>
     },
     {
         _id: uuid(),
-        label: <Box component="span" sx={{fontWeight: "bolder"}}>Titular y datos<br /> de instalación</Box>
+        label: <Box component="div" sx={{typography: {xs: "h5", md: "body2"}}} style={{fontWeight: "bolder"}}>Titular y datos<Hidden mdDown><br /></Hidden> de instalación</Box>
     },
     {
         _id: uuid(),
-        label: <Box component="span" sx={{fontWeight: "bolder"}}>Seguridad</Box>
+        label: <Box component="div" sx={{typography: {xs: "h5", md: "body2"}}} style={{fontWeight: "bolder"}}>Seguridad</Box>
     },
     {
         _id: uuid(),
-        label: <Box component="span" sx={{fontWeight: "bolder"}}>Contratación<br /> Servicios Fijos</Box>
+        label: <Box component="div" sx={{typography: {xs: "h5", md: "body2"}}} style={{fontWeight: "bolder"}}>Contratación<Hidden mdDown><br /></Hidden> Servicios Fijos</Box>
     },
     {
         _id: uuid(),
-        label: <Box component="span" sx={{fontWeight: "bolder"}}>Agendamiento<br /> de Instalación</Box>
+        label: <Box component="div" sx={{typography: {xs: "h5", md: "body2"}}} style={{fontWeight: "bolder"}}>Agendamiento<Hidden mdDown><br /></Hidden> de Instalación</Box>
     },
     {
         _id: uuid(),
-        label: <Box component="span" sx={{fontWeight: "bolder"}}>Resumen</Box>
+        label: <Box component="div" sx={{typography: {xs: "h5", md: "body2"}}} style={{fontWeight: "bolder"}}>Resumen</Box>
     }
 ]
 
@@ -151,9 +151,9 @@ function QontoStepIcon(props: StepIconProps) {
 // }
     return (
     <QontoStepIconRoot ownerState={{ active, completed }} className={className}>
-        <Box sx={{position: "absolute", top: "-50px", left: "50%", transform: "translateX(-50%)"}} className="QontoStepIcon-float">
+        <Box sx={{position: "absolute", top: "-50px", left: "50%", transform: "translateX(-50%)", display: {xs: "none", md: "initial"}}} className="QontoStepIcon-float">
             {stepIcons[String(props.icon)]}
-        </Box>
+        </Box>    
         {/* {completed ? (
             // Si esta completado que me muestre el check con el estilo
             <Check className="QontoStepIcon-completedIcon" />
@@ -173,14 +173,33 @@ interface StepperHeaderProps {
   numberStep: number
 }
 
+
+const StyledStepLabel = styled(StepLabel)(({theme}) => ({
+  "& .MuiStepLabel-labelContainer": {
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "initial"
+    }
+  }
+}));
+
 function StepperHeader({numberStep}: StepperHeaderProps) {
   return (
-    <Box sx={{ width: '100%', pb: 6, pt: 12}}>
+    <Box sx={{ width: '100%', pb: {xs: 3, md: 6}, pt: {xs: 6, md: 12}}}>
       <StyledContainer className="container-services">
-        <Stepper alternativeLabel activeStep={numberStep} connector={<QontoConnector />}>
+        {/* Modificaciones al Stepper Progress para mobile */}
+        <Hidden mdUp>
+          <Box sx={{textAlign: "center", mb: 2}}>
+            {stepIcons[String(numberStep + 1)]}
+            {steps[numberStep].label}
+          </Box>
+        </Hidden>
+        
+        {/* Stepper Progress desktop */}
+        <Stepper alternativeLabel activeStep={numberStep} connector={<QontoConnector />} className="padre">
           {steps.map((step) => (
             <Step key={step._id} /* completed={true} */>
-              <StepLabel StepIconComponent={QontoStepIcon}>{step.label}</StepLabel>
+              <StyledStepLabel StepIconComponent={QontoStepIcon} >{step.label}</StyledStepLabel>
             </Step>
           ))}
         </Stepper>   

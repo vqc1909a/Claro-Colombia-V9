@@ -38,7 +38,7 @@ import PurchaseSummary from "./PurchaseSummary";
 import ItemCollapse from "components/widgets/ItemCollapse";
 
 //!Actions
-import * as CART_ACTIONS from "redux/actions/cart";
+import * as CART_ACTIONS from "redux/slices/cart";
 
 //!React Redux
 import useAppDispatch from "utils/hooks/useAppDispatch";
@@ -95,11 +95,11 @@ function ShoppingCart(){
 
     //!Functions
     const setNumberPackages = (number: number): void => {
-        dispatch(CART_ACTIONS.UPDATE_NUMBER_PACKAGES_CART_ACTION(number))
+        dispatch(CART_ACTIONS.updateNumberPackages(number));
     }
     const handleCart = (): void => {
         setNumberStep(state => state + 1);
-        navigate("/cart/personal-information")
+        navigate("/cart/user-information")
     }
 
 

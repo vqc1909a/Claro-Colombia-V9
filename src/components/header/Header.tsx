@@ -55,7 +55,7 @@ import useAppDispatch from "utils/hooks/useAppDispatch";
 import * as USER_SELECTORS from "redux/selectors/user";
 
 //!Actions
-import * as USER_ACTIONS from "redux/actions/user";
+import * as USER_ACTIONS from "redux/slices/user";
 
 
 //! React Router dom
@@ -208,7 +208,7 @@ function Header() {
     const user = useAppSelector(USER_SELECTORS.selectUser);
     
     //! Refs Dom
-    const headerRef = useRef<HTMLDivElement | any>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
 
     //!Functions
     const handleNavigationPages = (_id: string): void => {
@@ -244,12 +244,12 @@ function Header() {
         if (!token) return null;
         ( async () => {
             try{
-                dispatch(USER_ACTIONS.GET_LOGGED_USER_REQUESTED_ACTION({}));
+                dispatch(USER_ACTIONS.getLoggedUserRequest());
                 const {data} = await getLoggedUser({token});
-                dispatch(USER_ACTIONS.GET_USER_LOGGED_SUCCESS_ACTION({...data[0]}));
+                dispatch(USER_ACTIONS.getLoggedUserSuccess({...data[0]}));
             }catch(err: any){
                 const {data} = err.response;
-                dispatch(USER_ACTIONS.GET_USER_LOGGED_ERROR_ACTION({message: data}));
+                dispatch(USER_ACTIONS.getLoggedUserError({message: data}));
             }
         })();
         // eslint-disable-next-line
@@ -257,7 +257,7 @@ function Header() {
 
     useEffect(() => {
         document.addEventListener('click', (e) => {
-            let isClickInsideElement = headerRef.current.contains(e.target);
+            let isClickInsideElement = headerRef.current && headerRef.current.contains(e.target as Node);
             if (sizeWidth > 1024 && !isClickInsideElement) {
                 setNavigationPages(NavigationPagesDefault);
             }

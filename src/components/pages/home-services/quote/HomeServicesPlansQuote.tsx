@@ -36,7 +36,7 @@ import useAppSelector from "utils/hooks/useAppSelector";
 import useAppDispatch from "utils/hooks/useAppDispatch";
 
 //! Actions
-import * as CART_ACTIONS from "redux/actions/cart";
+import * as CART_ACTIONS from "redux/slices/cart";
 
 //!Selectors
 import * as PLANS_SELECTORS from "redux/selectors/homeServicesPlans";
@@ -67,7 +67,7 @@ function HomeServicesPlansQuote() {
     useScrollToTop();
 
     const handleShoppingCart = () => {
-        dispatch(CART_ACTIONS.CART_ADD_ITEMS_ACTION(selectedPlans));
+        dispatch(CART_ACTIONS.addItems(selectedPlans));
         navigate("/cart")
     }
     return (
