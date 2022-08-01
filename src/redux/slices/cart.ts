@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import initStates from "./initStates";
-import {CartReducerState, ShippingAddress} from "./reducerStateInterface";
+import INIT_STATES from "./initStates";
+import {CartReducerState, ShippingAddress, TermsContract, UserInformation, InstallationSchedule} from "./reducerStateInterface";
 
 const cartSlice = createSlice({
 	name: "cart",
-	initialState: initStates.cart,
+	initialState: INIT_STATES.cart,
 	reducers: {
 		addItem(state: CartReducerState, action: PayloadAction) {
 			console.log("Añadir Producto al carrito");
@@ -44,17 +44,39 @@ const cartSlice = createSlice({
 		},
 		updateNumberPackages(state: CartReducerState, action: PayloadAction<number>) {
 			const payload = action.payload;
-			let numberPackages = state.numberPackages += payload;
+
+			const totalPrice = state.items.reduce(
+				(a, b) => a + (b.comboPrice || b.unitPrice),
+				0
+			);
+			let numberPackages = state.numberPackages + payload;
+
 			if(numberPackages === 0){
 				state.numberPackages = 1;
 			}else{
 				state.numberPackages = numberPackages;
 			}
+			
+			state.itemsPrice = parseFloat((totalPrice / 1.18).toFixed(2)) * state.numberPackages;
+			state.taxPrice = parseFloat(((0.18 * totalPrice) / 1.18).toFixed(2)) * state.numberPackages;
+			state.totalPrice = totalPrice * state.numberPackages;
 
 		},
+		saveUserInformation(state: CartReducerState, action: PayloadAction<UserInformation>) {
+			let payload = action.payload;
+			state.userInformation = payload
+		},
+		saveTermsContract(state: CartReducerState, action: PayloadAction<TermsContract>) {
+			const payload= action.payload;
+			state.termsContract = payload
+		},
+		saveInstallationSchedule(state: CartReducerState, action: PayloadAction<InstallationSchedule>){
+			const payload = action.payload;
+			state.installationSchedule = payload;
+		}
 	},
 });
 
-export const { addItem, addItems, saveShippingAddress, resetItems, updateNumberPackages } = cartSlice.actions;
+export const { addItem, addItems, saveShippingAddress, resetItems, updateNumberPackages, saveUserInformation, saveTermsContract, saveInstallationSchedule } = cartSlice.actions;
 
 export default cartSlice.reducer;

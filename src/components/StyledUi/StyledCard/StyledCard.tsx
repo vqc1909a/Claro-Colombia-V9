@@ -6,8 +6,10 @@ const StyledCard = styled(Card)(({theme}) => ({
     borderRadius: "10px",
     "&.card-services-container": {
         textAlign: "initial",
-        marginBottom: theme.spacing(8),
-
+        marginBottom: theme.spacing(4),
+        [theme.breakpoints.up("md")]: {
+            marginBottom: theme.spacing(8),
+        },
         //! Hijos
         "& .card-services-container__content": {
             paddingLeft: theme.spacing(2),

@@ -14,13 +14,13 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 
-function ModifyOrRemoveThePackage({totalPrice, numberPackages}: ModifyOrRemoveThePackageProps){
+function ModifyOrRemoveThePackage({totalPrice}: ModifyOrRemoveThePackageProps){
 
      return (
-        <Box sx={{pr: {xs: 0, md: 4}}}>
+        <Box sx={{pr: {xs: 0, md: 3}}}>
             <Typography component="p" sx={{mb: 2, textAlign: {xs: "center", md: "initial"}, typography: {xs: "h4", md: "h5"}}} style={{fontWeight: "bolder"}} >Productos</Typography>
-            <Box sx={{width: "120px", ml: {xs: "auto", md: 1.5}, mb: 2, mr: "auto"}}>
-                <CardSmall totalPrice={totalPrice * numberPackages}></CardSmall>
+            <Box sx={{width: "120px", pl: {xs: 0, md: 1.5}, mb: 2, mx: "auto"}}>
+                <CardSmall totalPrice={totalPrice}></CardSmall>
             </Box>                                           
 
             <Box sx={{ml: {xs: 0, md: 1.5}, textAlign: {xs: "center", md: "initial"}}}>

@@ -5,13 +5,17 @@ import {styled} from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-
 import CheckIcon from "@mui/icons-material/Check";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
 
+//!Helpers
+import { separateThousands } from "utils/helpers/formatNumber";
+
+//!Icons
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 
 //!Ui Componentes
 import StyledButton from "components/StyledUi/StyledButton";
@@ -23,12 +27,11 @@ import useAppDispatch from "utils/hooks/useAppDispatch";
 import * as PLANS_ACTIONS from "redux/slices/homePlans";
 
 //! Interfaces
-import {CardOne} from "./interfaces";
-import CardActions from "@mui/material/CardActions";
+import {CardOneProps} from "./interfaces";
 
-function HomeServicesPlansCardOne({ item }: CardOne) {
-    const [quantityHD, setQuantityHD] = useState(1);
-    const [quantityTV, setQuantityTV] = useState(1);
+function HomeServicesPlansCardOne({ item }: CardOneProps) {
+    const [quantityHD, setQuantityHD] = useState<number>(1);
+    const [quantityTV, setQuantityTV] = useState<number>(1);
     const dispatch = useAppDispatch();
 
     const {_id, category, plan, benefits, unitPrice, comboPrice, isSelected} = item;
@@ -396,7 +399,7 @@ function HomeServicesPlansCardOne({ item }: CardOne) {
                                     component="span"
                                     sx={{mt: 0.5, mb: -0.5}}
                                 >
-                                    ${unitPrice}
+                                    ${separateThousands(unitPrice)}
                                 </Typography>
                                 <Typography
                                     variant="body2"
@@ -428,7 +431,7 @@ function HomeServicesPlansCardOne({ item }: CardOne) {
                                         mb: -0.5,
                                     })}
                                 >
-                                    ${comboPrice}
+                                    ${separateThousands(comboPrice)}
                                 </Typography>
                                 <Typography
                                     variant="body1"

@@ -1,7 +1,6 @@
-import {HomeServicesPlansTabHeaderArgs} from "./interfaces";
 import Box from "@mui/material/Box";
 
-const HomeServicesPlansTabHeader = ({title}: HomeServicesPlansTabHeaderArgs) => {
+const HomeServicesPlansTabHeader = ({title}: {title: string}) => {
   return (
      <Box
         component="p"

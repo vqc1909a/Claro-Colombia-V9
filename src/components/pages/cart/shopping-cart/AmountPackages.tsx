@@ -7,15 +7,15 @@ import {AmountPackagesProps} from "./interfaces";
 //!Widgets
 import Counter from "components/widgets/Counter";
 
+//!Helpers
+import {separateThousands} from "utils/helpers/formatNumber";
 
 
 function AmountPackages({numberPackages, totalPrice, setNumberPackages}: AmountPackagesProps){
 
     return (
         <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: {xs: "space-around", md: "space-between"}, pt: {xs: 2, md: 0}}}>
-            {/* Esto tiene que ponder en tu widget */}
-            <Counter value={numberPackages} setValue={setNumberPackages}></Counter>
-            {/* ------------------------------ */}
+            <Counter value={numberPackages} setValue={setNumberPackages} notShow={false}></Counter>
 
             <Box sx={{textAlign: "right"}}>
                 <Typography
@@ -30,7 +30,7 @@ function AmountPackages({numberPackages, totalPrice, setNumberPackages}: AmountP
                 >
                     Sub-total
                 </Typography>
-                <Typography variant="h6" component="p" sx={{fontWeight: "bolder"}}>${totalPrice * numberPackages}</Typography>
+                <Typography variant="h6" component="p" sx={{fontWeight: "bolder"}}>${separateThousands(totalPrice)}</Typography>
             </Box>
         </Box>
     )

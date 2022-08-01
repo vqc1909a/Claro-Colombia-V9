@@ -1,8 +1,8 @@
-export interface ItemArgs {
+export interface ItemProps {
     item: {
         image: string;
     };
 }
-export interface HeaderHomeSectionArgs {
+export interface HeaderHomeSectionProps {
     title: string;
 }

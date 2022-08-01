@@ -20,6 +20,48 @@ export interface ShippingAddress {
     isFree: boolean,
 }
 
+
+export interface UserInformation {
+    personalData: {
+        email: string,
+        firstname: string,
+        lastname: string,
+        cellphone: string,
+        additionalCellphone: string,
+        documentType: string,
+        documentNumber: string
+    },
+    installationData: {
+        whoReceives: string,
+        nameOtherPerson: string
+    }
+}
+
+export interface TermsContract{
+    acceptTermsContract: boolean,
+    acceptClauseContract: boolean, 
+    acceptReceiveDigitalInvoice: boolean
+}
+
+export interface InstallationSchedule{
+    date: string,
+    time: string
+}
+
+export interface OrderHomePlan {
+    orderNumber: string,
+    orderDate: string,
+    items: Plan[],
+    itemsPrice: number,
+    taxPrice: number,
+    totalPrice: number,
+    numberPackages: number,
+    shippingAddress: ShippingAddress,
+    userInformation: UserInformation,
+    termsContract: TermsContract,
+    installationSchedule: InstallationSchedule
+}
+
 //!Interfaces de cada uno de los reducers
 export interface UserReducerState {
  isLogged: boolean,
@@ -43,5 +85,30 @@ export interface CartReducerState {
     taxPrice: number,
     numberPackages: number,
     shippingAddress: ShippingAddress,
-    totalPrice: number    
+    totalPrice: number,
+    userInformation: UserInformation,
+    termsContract: TermsContract,
+    installationSchedule: InstallationSchedule
 }
+
+export interface PinReducerState {
+    stateSend: {
+        hasSend: boolean,
+        isLoading: boolean,
+        isError: boolean,
+        message: string
+    },
+    stateVerify: {
+        isLoading: boolean,
+        isError: boolean,
+        message: string
+    }
+}
+
+export interface OrderReducerState {
+    orderHomePlan: OrderHomePlan,
+    isError: boolean,
+    isLoading: boolean,
+    message: string
+}
+

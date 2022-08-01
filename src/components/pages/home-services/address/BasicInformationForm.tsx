@@ -15,7 +15,7 @@ import StyledSelect from "components/StyledUi/StyledSelect"
 import {v4 as uuid} from "uuid";
 
 //!Interfaces
-import {BasicInformationFormArgs} from "./interfaces";
+import {BasicInformationFormProps} from "./interfaces";
 
 const departamentos = [
     {
@@ -180,7 +180,7 @@ const direcciones = [
     },
 ];
 
-const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: BasicInformationFormArgs) => {
+const BasicInformationForm = ({ handleChange, handleChangeSelect, state}: BasicInformationFormProps) => {
     const {
         departamento,
         ciudad,
@@ -190,7 +190,7 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
         detallesDireccion1,
         detallesDireccion2,
         detallesDireccion3,
-    } = informacionBasica;
+    } = state;
 
     return (
         <Box sx={{mb: 4}}>
@@ -204,13 +204,14 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                 {/* Departamento */}
                 <StyledGrid item xs={12} sm={6}>
                     <StyledInputLabel htmlFor="departamento">
-                        * Departamento
+                        Departamento *
                     </StyledInputLabel>
                     <StyledSelect
                         id="departamento"
                         value={departamento}
-                        onChange={handleInformacionBasica}
+                        onChange={handleChangeSelect}
                         name="departamento" 
+                        required
                         displayEmpty={true}
                     >
                         <MenuItem value="" selected disabled>
@@ -229,15 +230,15 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                 {/* Ciudad */}
                 <StyledGrid item xs={12} sm={6}>
                     <StyledInputLabel htmlFor="ciudad">
-                        * Ciudad
+                        Ciudad * 
                     </StyledInputLabel>
                     <StyledSelect
                         id="ciudad"
                         value={ciudad}
-                        onChange={handleInformacionBasica}
+                        onChange={handleChangeSelect}
                         name="ciudad"
                         displayEmpty={true}
-
+                        required
                     >
                         <MenuItem value="" selected disabled>
                             Selecciona
@@ -266,21 +267,23 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                     <StyledTextField
                         id="centroPoblado"
                         value={centroPoblado}
-                        onChange={handleInformacionBasica}
+                        onChange={handleChange}
                         name="centroPoblado"
+                        type="text"
                     ></StyledTextField>
                 </StyledGrid>
                 {/* Estrato */}
                 <StyledGrid item xs={6}>
                     <StyledInputLabel htmlFor="estrato">
-                        * Estrato
+                        Estrato *
                     </StyledInputLabel>
                     <StyledSelect
                         id="estrato"
                         value={estrato}
-                        onChange={handleInformacionBasica}
+                        onChange={handleChangeSelect}
                         name="estrato"
                         displayEmpty={true}
+                        required
                     >
                         <MenuItem value="" selected disabled>
                             Selecciona
@@ -296,15 +299,15 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                 {/* Dirección */}
                 <StyledGrid item xs={12} sm={6}>
                     <StyledInputLabel htmlFor="direccion">
-                        * Dirección
+                        Dirección * 
                     </StyledInputLabel>
                     <StyledSelect
                         id="direccion"
                         value={direccion}
-                        onChange={handleInformacionBasica}
+                        onChange={handleChangeSelect}
                         name="direccion"
-                        placeholder="Placeholder"
                         displayEmpty={true}
+                        required
                     >
                         <MenuItem value="" selected disabled>
                             Selecciona
@@ -323,7 +326,7 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                 {/* Detalle Dirección */}
                 <StyledGrid item xs={12} sm={6}>
                     <StyledInputLabel htmlFor="detallesDireccion1">
-                        * Detalle dirección
+                        Detalle dirección * 
                     </StyledInputLabel>
                     <Box
                         sx={{
@@ -336,7 +339,8 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                             name="detallesDireccion1"
                             helperText="Ej. 123B Sur B"
                             value={detallesDireccion1}
-                            onChange={handleInformacionBasica}
+                            onChange={handleChange}
+                            required
                         ></StyledTextField>
                         <Box
                             component="span"
@@ -352,7 +356,8 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                             name="detallesDireccion2"
                             helperText="Ej. 23B Bis"
                             value={detallesDireccion2}
-                            onChange={handleInformacionBasica}
+                            onChange={handleChange}
+                            required
                         ></StyledTextField>
                         <Box
                             component="span"
@@ -368,7 +373,8 @@ const BasicInformationForm = ({ handleInformacionBasica, informacionBasica}: Bas
                             name="detallesDireccion3"
                             helperText=" "
                             value={detallesDireccion3}
-                            onChange={handleInformacionBasica}
+                            onChange={handleChange}
+                            required
                         ></StyledTextField>
                     </Box>
                 </StyledGrid>

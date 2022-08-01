@@ -3,8 +3,8 @@ import {styled} from "@mui/material/styles"
 
 const StyledTextField = styled(TextField)(({theme}) => ({
  width: "100%",
+ backgroundColor: theme.palette.common.white,
  "&.MuiFormControl-root": {
-    margin: 0,
  },
  //! Hijos
  "& .MuiOutlinedInput-notchedOutline": {
@@ -13,6 +13,9 @@ const StyledTextField = styled(TextField)(({theme}) => ({
  //! Variants
  "&.vendorCode": {
     backgroundColor: theme.palette.common.white
+ },
+ "&.field-normal": {
+   width: "initial"
  }
 }))
 export default StyledTextField

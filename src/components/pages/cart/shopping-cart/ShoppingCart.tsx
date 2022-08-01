@@ -24,7 +24,6 @@ import {Link as RouterLink, useOutletContext} from "react-router-dom";
 import useAppSelector from "utils/hooks/useAppSelector";
 import useScrollToTop from "utils/hooks/useScrollToTop";
 
-
 //!Selectors
 import * as CARD_SELECTORS from "redux/selectors/cart";
 
@@ -47,14 +46,8 @@ import useAppDispatch from "utils/hooks/useAppDispatch";
 import {useNavigate} from "react-router-dom";
 
 //!Interfaces
-import {ContextType} from "./interfaces";
+import {ContextType, ItemAdditionalInformation} from "./interfaces";
 
-interface ItemAdditionalInformation {
-    _id: string,
-    label: string,
-    description: string,
-    status: boolean
-}
 const ListAdditionalInformationDefault = [
     {
         _id: uuid(),
@@ -77,8 +70,8 @@ const ListAdditionalInformationDefault = [
 ];
 
 
-
 function ShoppingCart(){
+
     let dispatch = useAppDispatch();
     let navigate = useNavigate();
     const {setNumberStep} = useOutletContext<ContextType>();
@@ -91,17 +84,16 @@ function ShoppingCart(){
     let totalPrice = useAppSelector(CARD_SELECTORS.selectTotalPrice);
 
     //!States
-    const [listAdditionalInformation, setListAdditionalInformation] = useState<ItemAdditionalInformation[]>(ListAdditionalInformationDefault);
+    const [listAdditionalInformation, setListAdditionalInformation] = useState<ItemAdditionalInformation[]>(ListAdditionalInformationDefault);  
 
     //!Functions
     const setNumberPackages = (number: number): void => {
         dispatch(CART_ACTIONS.updateNumberPackages(number));
     }
     const handleCart = (): void => {
-        setNumberStep(state => state + 1);
+        setNumberStep(2);
         navigate("/cart/user-information")
     }
-
 
     //!Effects
     useScrollToTop();
@@ -114,62 +106,56 @@ function ShoppingCart(){
                     backgroundColor: (theme) => theme.palette.common.white
                 }}
             >
-                 {/* Shopping Cart Content Desktop */}
+                 {/* Shopping Cart Desktop */}
                 <StyledContainer className="container-services">
-                    <StyledGrid container spacing={0}>
-                        {/* Shopping Cart Header */}
+                        {/* Shopping Cart Header Desktop*/}
                         <Box sx={{/* mx: {xs: 0, md: 4}, */ my: 3, display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
                             <Typography variant="h4" component="h1" >Carrito de Compra</Typography>
                             <Link component={RouterLink} to="/servicios-hogar-cotizacion" color="info.main" underline="hover">{"< Regresar"}</Link>
                         </Box>
 
-                        {/* Shopping Cart Content */}
-                        <StyledGrid item xs={12} /* sx={{mx: {xs: 0, md: 4}}} */>
-                            {/* Shopping Cart Content Desktop */}
-                            <Hidden mdDown>
-                                <StyledCard variant="outlined" className="card-services-container card-services-container--shopping-cart">
-                                    <CardContent className="card-services-container__content">
-                                        <Box sx={{display: "flex", flexDirection: "row"}}>
-                                            {/* Modificar o Eliminar el Paquete */}
-                                            <ModifyOrRemoveThePackage totalPrice={totalPrice} numberPackages={numberPackages}></ModifyOrRemoveThePackage>
+                        {/* Shopping Cart Content Desktop */}
+                        <Hidden mdDown>
+                            <StyledCard variant="outlined" className="card-services-container card-services-container--shopping-cart"/* sx={{mx: {xs: 0, md: 4}}} */>
+                                <CardContent className="card-services-container__content">
+                                    <Box sx={{display: "flex", flexDirection: "row"}}>
+                                        {/* Modificar o Eliminar el Paquete */}
+                                        <ModifyOrRemoveThePackage totalPrice={totalPrice}></ModifyOrRemoveThePackage>
 
-                                            <StyledGrid container spacing={4} sx={{flex: 1}}>   
-                                                {/* Detalles del Paquete */}
-                                                <StyledGrid item xs={12} md={5} sx={{marginTop: 8}}>
-                                                    <PackageDetails plans={plans} totalPrice={totalPrice} numberPackages={numberPackages}></PackageDetails>
-                                                </StyledGrid>
-                                                
-                                                {/* Cantidad de Paquetes */}
-                                                <StyledGrid item xs={12} md={3} sx={{marginTop: 4}}>
-                                                    <AmountPackages numberPackages={numberPackages} totalPrice={totalPrice} setNumberPackages={setNumberPackages} ></AmountPackages>
-                                                </StyledGrid>
-
-                                                {/* Resumen de Compra */}
-                                                <StyledGrid item xs={12} md={4}>
-                                                    <PurchaseSummary totalPrice={totalPrice} plansPrice={plansPrice} taxPrice={taxPrice} numberPackages={numberPackages} shippingAddress={shippingAddress} handleCart={handleCart}></PurchaseSummary>                     
-                                                </StyledGrid>
+                                        <StyledGrid container spacing={3}>   
+                                            {/* Detalles del Paquete */}
+                                            <StyledGrid item xs={12} md={5} sx={{marginTop: 8}}>
+                                                <PackageDetails plans={plans} totalPrice={totalPrice}></PackageDetails>
                                             </StyledGrid>
-                                        </Box>
-                                    </CardContent>
-                                </StyledCard>
-                            </Hidden>
-                           
-                        </StyledGrid>
-                    </StyledGrid>
+                                            
+                                            {/* Cantidad de Paquetes */}
+                                            <StyledGrid item xs={12} md={3} sx={{marginTop: 4}}>
+                                                <AmountPackages numberPackages={numberPackages} totalPrice={totalPrice} setNumberPackages={setNumberPackages} ></AmountPackages>
+                                            </StyledGrid>
+
+                                            {/* Resumen de Compra */}
+                                            <StyledGrid item xs={12} md={4}>
+                                                <PurchaseSummary totalPrice={totalPrice} plansPrice={plansPrice} taxPrice={taxPrice} shippingAddress={shippingAddress} handleCart={handleCart}></PurchaseSummary>                     
+                                            </StyledGrid>
+                                        </StyledGrid>
+                                    </Box>
+                                </CardContent>
+                            </StyledCard>
+                        </Hidden>
                 </StyledContainer>
 
                  {/* Shopping Cart Content Mobile */}
                 <Hidden mdUp>
                     <Box sx={{backgroundColor: theme => theme.palette.grey["100"], py: {xs: 4, md: 0}}}>
                         <StyledContainer className="container-services">
-                            <ModifyOrRemoveThePackage totalPrice={totalPrice} numberPackages={numberPackages}></ModifyOrRemoveThePackage>
-                            <PackageDetails plans={plans} totalPrice={totalPrice} numberPackages={numberPackages}></PackageDetails>
+                            <ModifyOrRemoveThePackage totalPrice={totalPrice}></ModifyOrRemoveThePackage>
+                            <PackageDetails plans={plans} totalPrice={totalPrice}></PackageDetails>
                             <AmountPackages numberPackages={numberPackages} totalPrice={totalPrice} setNumberPackages={setNumberPackages} ></AmountPackages>
                         </StyledContainer>
                     </Box>
                     <Box sx={{backgroundColor: theme => theme.palette.common.white}}>
                         <StyledContainer className="container-services">
-                            <PurchaseSummary totalPrice={totalPrice} plansPrice={plansPrice} taxPrice={taxPrice} numberPackages={numberPackages} shippingAddress={shippingAddress} handleCart={handleCart}></PurchaseSummary>                   
+                            <PurchaseSummary totalPrice={totalPrice} plansPrice={plansPrice} taxPrice={taxPrice} shippingAddress={shippingAddress} handleCart={handleCart}></PurchaseSummary>                   
                         </StyledContainer>
                     </Box>
 

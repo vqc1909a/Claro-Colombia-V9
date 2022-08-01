@@ -19,8 +19,6 @@ import Button from '@mui/material/Button';
 import MaximizeOutlinedIcon from "@mui/icons-material/MaximizeOutlined";
 import CloseIcon from '@mui/icons-material/Close';
 
-// import axios from "axios";
-
 //!Mui Components
 import StyledContainer from "components/StyledUi/StyledContainer";
 import StyledGrid from "components/StyledUi/StyledGrid";
@@ -28,12 +26,14 @@ import StyledTabs from "components/StyledUi/StyledTabs";
 import StyledTabsMobile from "components/StyledUi/StyledTabsMobile";
 import StyledButton from "components/StyledUi/StyledButton";
 
-
-//!Layouts
+//!Components
 import HomeServicesHeader from "../HomeServicesHeader";
 import HomeServicesPlansCardOne from "./HomeServicesPlansCardOne";
 import HomeServicesPlansCardTwo from "./HomeServicesPlansCardTwo";
 import HomeServicesPlansTabHeader from "./HomeServicesPlansTabHeader";
+
+//!Helpers
+import {separateThousands} from "utils/helpers/formatNumber";
 
 //!Widgets
 import LoaderPage from "components/widgets/LoaderPage";
@@ -59,9 +59,11 @@ import useAppSelector from "utils/hooks/useAppSelector";
 import * as PLANS_ACTIONS from "redux/slices/homePlans";
 import * as CART_ACTIONS from "redux/slices/cart";
 
-
 //! Selectors
 import * as PLANS_SELECTORS from "redux/selectors/homeServicesPlans";
+
+//!Helpers
+import {formatLetterToCapitalize} from "utils/helpers/formatLetter";
 
 const TabPanel = (props: TabPanelProps) => {
     const {children, value, index, ...other} = props;
@@ -87,11 +89,10 @@ const a11yProps = (index: number) => {
 };
 
 function HomeServicesPlans() {
-   
-    const [value, setValue] = useState(0);
-    // const [plans, setPlans] = useState<Plan[] | any[]>([]);
-    const navigate = useNavigate();
+    const navigate = useNavigate();   
+    const [valueTab, setValueTab] = useState<number>(0);
     const plans = useAppSelector(PLANS_SELECTORS.selectPlans);
+    const selectedPlans = useAppSelector(PLANS_SELECTORS.selectSelectedPlans);
     const isLoading = useAppSelector(PLANS_SELECTORS.selectIsLoading);
 
     const dispatch = useAppDispatch();
@@ -100,12 +101,12 @@ function HomeServicesPlans() {
         event: React.SyntheticEvent,
         newValue: number
     ): void => {
-        setValue(newValue);
+        setValueTab(newValue);
     };
    
     //! Functions
     const handleResetPlans = () => {
-        dispatch(PLANS_ACTIONS.resetSelectedHomePlans());
+        dispatch(PLANS_ACTIONS.resetHomePlans());
         dispatch(CART_ACTIONS.resetItems());
     }
 
@@ -119,18 +120,20 @@ function HomeServicesPlans() {
 
     //!Conseguir todos los planes
     useEffect((): any => {
-        if (plans.length) return null;
-        (async () => {
+        if (plans.length) return;
+
+        const getPlansFunction = async () => {
             try{
                 dispatch(PLANS_ACTIONS.getHomePlansRequest());
                 const {data} = await getPlans();
                 const plans = (data as Plan[]).map(plan => ({...plan, isSelected: false}))  
                 dispatch(PLANS_ACTIONS.getHomePlansSuccess(plans))
             }catch(err: any){
-                const {data} = err.response;
-                dispatch(PLANS_ACTIONS.getHomePlansError({message: data}));
+                const message = err.response ? err.response.data.message : err.message
+                dispatch(PLANS_ACTIONS.getHomePlansError({message}));
             }
-        })();
+        }
+        getPlansFunction();
         //eslint-disable-next-line
     }, []);
 
@@ -220,7 +223,7 @@ function HomeServicesPlans() {
                                 {/* Tabs Header */}
                                 <Hidden smDown>
                                     <StyledTabs
-                                        value={value}
+                                        value={valueTab}
                                         onChange={handleChange}
                                         aria-label="basic tabs example"
                                         variant="fullWidth"
@@ -254,7 +257,7 @@ function HomeServicesPlans() {
                                     </StyledTabs>
                                 </Hidden>
                                 {/* Tabs Content - Internet Plans */}
-                                <TabPanel value={value} index={0}>
+                                <TabPanel value={valueTab} index={0}>
                                     <HomeServicesPlansTabHeader title="de internet"></HomeServicesPlansTabHeader>                                   
                                     <StyledGrid
                                         container
@@ -275,7 +278,7 @@ function HomeServicesPlans() {
                                     </StyledGrid>
                                 </TabPanel>
                                 {/* Tabs Content - Televisión Plans */}
-                                <TabPanel value={value} index={1}>
+                                <TabPanel value={valueTab} index={1}>
                                     <HomeServicesPlansTabHeader title="de televisión"></HomeServicesPlansTabHeader>
                                     <StyledGrid
                                         container
@@ -296,7 +299,7 @@ function HomeServicesPlans() {
                                     </StyledGrid>
                                 </TabPanel>
                                 {/* Tabs Content - Telefonía Plans */}
-                                <TabPanel value={value} index={2}>
+                                <TabPanel value={valueTab} index={2}>
                                     <HomeServicesPlansTabHeader title="de telefonía"></HomeServicesPlansTabHeader>
                                     <StyledGrid
                                         container
@@ -317,7 +320,7 @@ function HomeServicesPlans() {
                                     </StyledGrid>
                                 </TabPanel>
                                 {/* Tabs Content - Adicionales Plans */}
-                                <TabPanel value={value} index={3}>
+                                <TabPanel value={valueTab} index={3}>
                                     <HomeServicesPlansTabHeader title="adicionales para tu hogar"></HomeServicesPlansTabHeader>
                                     <StyledGrid
                                         container
@@ -347,7 +350,7 @@ function HomeServicesPlans() {
                     {/* Planes Tabs Mobile */}                       
                     <Hidden smUp>
                         <StyledTabsMobile
-                            value={value}
+                            value={valueTab}
                             onChange={handleChange}
                             aria-label="basic tabs example"
                             variant="fullWidth"
@@ -381,7 +384,7 @@ function HomeServicesPlans() {
                         <StyledGrid container spacing={1}>
                             <StyledGrid item xs={6} md={5}>
                                 <Typography variant="body2">
-                                    Plan de {plans.filter(plan => plan.isSelected).map(plan => `${plan.category.charAt(0).toUpperCase()}${plan.category.slice(1)} ${plan.plan} + `)}    
+                                    Plan de {plans.filter(plan => plan.isSelected).map(plan => `${formatLetterToCapitalize(plan.category)} ${plan.plan} + `)}    
                                 </Typography>
                             </StyledGrid>
                             <StyledGrid item xs={6} md={2}>
@@ -398,11 +401,11 @@ function HomeServicesPlans() {
                                     <Box>
                                         <Hidden mdUp>
                                             <Typography variant="body2">Precio cotización</Typography>
-                                            <Typography variant="h5"><Box component="span" sx={{fontWeight: "bolder"}}>${plans.filter(plan => plan.isSelected).reduce((a, b) => a + (b.comboPrice || b.unitPrice), 0)}</Box>/mes</Typography>
+                                            <Typography variant="h5"><Box component="span" sx={{fontWeight: "bolder"}}>${separateThousands(selectedPlans.reduce((a, b) => a + (b.comboPrice || b.unitPrice), 0))}</Box>/mes</Typography>
                                         </Hidden>
                                         <Hidden mdDown>
                                             <Typography variant="body1">Precio cotización</Typography>
-                                            <Typography variant="h4"><Box component="span" sx={{fontWeight: "bolder"}}>${plans.filter(plan => plan.isSelected).reduce((a, b) => a + (b.comboPrice || b.unitPrice), 0)}</Box>/mes</Typography>
+                                            <Typography variant="h4"><Box component="span" sx={{fontWeight: "bolder"}}>${separateThousands(selectedPlans.reduce((a, b) => a + (b.comboPrice || b.unitPrice), 0))}</Box>/mes</Typography>
                                         </Hidden>
                                     </Box>
                                 </Box>

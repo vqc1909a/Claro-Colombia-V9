@@ -1,4 +1,3 @@
-import { FormEvent } from "react"
 
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
@@ -23,7 +22,8 @@ import useAppDispatch from "utils/hooks/useAppDispatch";
 import {useSelector} from "react-redux";
 
 //! Interfaces
-import {FormLoginProps} from "./interfaces"
+import {FormEvent} from "interfaces";
+import {FormLoginState} from "./interfaces"
 
 //!Hooks
 import useForm from "utils/hooks/useForm";
@@ -45,13 +45,13 @@ function Login(){
     const isError = useSelector(USER_SELECTORS.selectIsError);
     const message = useSelector(USER_SELECTORS.selectMessage);
 
-    const {email, password, form, handleChange} = useForm<FormLoginProps>({
+    const {email, password, form, handleChange} = useForm<FormLoginState>({
         email: "",
         password: ""
-    }) 
+    })      
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit: FormEvent = async (event) => {
+        event.preventDefault();
         
         let user = form;        
         try{
@@ -64,8 +64,8 @@ function Login(){
             return !isHomeServicesPlans ? navigate("/") : navigate("/cart") 
 
         }catch(err: any){
-            const {data} = err.response;
-            dispatch(USER_ACTIONS.loginError({message: data}));
+            const message = err.response ? err.response.data : err.message;
+            dispatch(USER_ACTIONS.loginError({message}));
         }
 
     }

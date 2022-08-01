@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import {CounterArgs} from "./interfaces";
+import {CounterProps} from "./interfaces";
 
-function Counter({value, setValue}: CounterArgs){
+function Counter({value, setValue, notShow}: CounterProps){
 
     return (
         <Box
@@ -33,18 +33,25 @@ function Counter({value, setValue}: CounterArgs){
                     alignItems: "center",
                 }}
             >
-                <Typography
-                    variant="h5"
-                    component="p"
-                    sx={{
-                        cursor: "pointer",
-                        color: (theme) =>
-                            theme.palette.grey["700"],
-                    }}
-                    onClick={() => setValue(-1)}
-                >
-                    -
-                </Typography>
+                {
+                    notShow
+                    ?
+                    ""
+                    :
+                    <Typography
+                        variant="h5"
+                        component="p"
+                        sx={{
+                            cursor: "pointer",
+                            color: (theme) =>
+                                theme.palette.grey["700"],
+                        }}
+                        onClick={() => setValue(-1)}
+                    >
+                        -
+                    </Typography>
+                    
+                }
                 <Typography
                     variant="body1"
                     component="p"
@@ -62,17 +69,24 @@ function Counter({value, setValue}: CounterArgs){
                 >
                     {value}
                 </Typography>
-                <Typography
-                    variant="h5"
-                    component="p"
-                    sx={{
-                        cursor: "pointer",
-                        color: (theme) => theme.palette.grey["700"],
-                    }}
-                    onClick={() => setValue(1)}
-                >
-                    +
-                </Typography>
+                {
+                    notShow
+                    ?
+                    ""
+                    :
+                    <Typography
+                        variant="h5"
+                        component="p"
+                        sx={{
+                            cursor: "pointer",
+                            color: (theme) => theme.palette.grey["700"],
+                        }}
+                        onClick={() => setValue(1)}
+                    >
+                        +
+                    </Typography>
+                    
+                }
             </Box>
         </Box>
 

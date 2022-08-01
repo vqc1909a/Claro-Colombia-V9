@@ -1,2 +1,2 @@
-import UserInformation from "./UserInformation";
-export default UserInformation
+import CartUserInformation from "./CartUserInformation";
+export default CartUserInformation

@@ -1,4 +1,3 @@
-import React from "react";
 import { styled } from "@mui/material/styles";
 
 //!Componentes
@@ -10,11 +9,14 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Hidden from "@mui/material/Hidden";
+import CardActions from "@mui/material/CardActions";
 
 //! Mui Components
 import StyledImage from "components/StyledUi/StyledImage";
 import StyledButton from "components/StyledUi/StyledButton";
 
+//!Helpers
+import { separateThousands } from "utils/helpers/formatNumber";
 
 //!React Redux
 import useAppDispatch from "utils/hooks/useAppDispatch";
@@ -23,10 +25,9 @@ import useAppDispatch from "utils/hooks/useAppDispatch";
 import * as PLANS_ACTIONS from "redux/slices/homePlans";
 
 //! Interfaces
-import {CardTwo} from "./interfaces";
-import CardActions from "@mui/material/CardActions";
+import {CardTwoProps} from "./interfaces";
 
-function HomeServicesPlansCardTwo({ item }: CardTwo) {
+function HomeServicesPlansCardTwo({ item }: CardTwoProps) {
   const dispatch = useAppDispatch();
   const {_id, subcategory, plan, image, unitPrice, isSelected} = item;
 
@@ -175,7 +176,7 @@ function HomeServicesPlansCardTwo({ item }: CardTwo) {
                   mb: -0.5
                 })}
               >
-                ${unitPrice}
+                ${separateThousands(unitPrice)}
               </Typography>
               <Typography
                 variant="body1"

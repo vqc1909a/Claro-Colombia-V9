@@ -12,7 +12,12 @@ import "./App.css";
 import ProtectedRoutePublic from "components/hocs/ProtectedRoutePublic";
 import ProtectedRoutePrivate from "components/hocs/ProtectedRoutePrivate";
 
-import HomeCart from "components/pages/cart/home";
+//!El componente CartHome es el Outlet
+import CartHome from "components/pages/cart/home";
+
+//!Estos componentes no llevarán lazy load xq estos son views que ocupan toda la pantalla
+import CartSecurityWelcome from "components/pages/cart/security/welcome";
+import CartSecurityRedirection from "components/pages/cart/security/redirection";
 
 //!Pages
 const Home = lazy(() => import("components/pages/home"));
@@ -33,8 +38,17 @@ const Login = lazy(() => import("components/pages/login"));
 
 const ShoppingCart = lazy(() => import("components/pages/cart/shopping-cart"));
 
-const UserInformation = lazy(() => import("components/pages/cart/user-information"));
+const CartUserInformation = lazy(() => import("components/pages/cart/user-information"));
 
+
+const CartSecurityHome = lazy(() => import("components/pages/cart/security/home"));
+
+
+const CartContractingServices = lazy(() => import("components/pages/cart/contracting-services"));
+
+const CartInstallationSchedule = lazy(() => import("components/pages/cart/installation-schedule"));
+
+const CartResumen = lazy(() => import("components/pages/cart/resumen"));
 
 function App() {
     return (
@@ -89,7 +103,7 @@ function App() {
                     {/* Proteger Rutas Privadas */}
                     <Route path="/" element={<ProtectedRoutePrivate />}>
 
-                        <Route path="/cart" element={<HomeCart></HomeCart>}>
+                        <Route path="/cart" element={<CartHome></CartHome>}>
                             <Route
                                 path=""
                                 element={
@@ -102,8 +116,41 @@ function App() {
                                 path="user-information"
                                 element={
                                         <Suspense fallback={<LoaderPage></LoaderPage>}>
-                                            <UserInformation></UserInformation>
+                                            <CartUserInformation></CartUserInformation>
                                         </Suspense>
+                                }
+                            ></Route>
+
+                            <Route path="security/welcome" element={<CartSecurityWelcome></CartSecurityWelcome>}
+                            ></Route>
+
+                            <Route path="security" element={
+                                <Suspense fallback={<LoaderPage></LoaderPage>}>
+                                        <CartSecurityHome></CartSecurityHome>
+                                </Suspense>
+                            }
+                            ></Route>
+
+                            <Route path="security/redirection" element={<CartSecurityRedirection></CartSecurityRedirection>}
+                            ></Route>
+                            
+                            <Route path="contracting-services" element={
+                                    <Suspense fallback={<LoaderPage></LoaderPage>}>
+                                            <CartContractingServices></CartContractingServices>
+                                    </Suspense>
+                                }
+                            ></Route>
+
+                            <Route path="installation-schedule" element={
+                                    <Suspense fallback={<LoaderPage></LoaderPage>}>
+                                            <CartInstallationSchedule></CartInstallationSchedule>
+                                    </Suspense>
+                                }
+                            ></Route>
+                            <Route path="resumen" element={
+                                    <Suspense fallback={<LoaderPage></LoaderPage>}>
+                                            <CartResumen></CartResumen>
+                                    </Suspense>
                                 }
                             ></Route>
                         </Route>

@@ -2,7 +2,7 @@ import "./index.css"
 
 function LoaderPage(){
  return (
-  <div style={{minHeight: "100vh", width: "100%", display: "flex", justifyContent: "center", alignItems: "flex-start"}}>
+  <div style={{minHeight: "100vh", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
    <div className="sk-fading-circle">
      <div className="sk-circle1 sk-circle"></div>
      <div className="sk-circle2 sk-circle"></div>

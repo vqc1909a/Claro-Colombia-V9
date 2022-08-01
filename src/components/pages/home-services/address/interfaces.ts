@@ -1,16 +1,6 @@
-import { SelectChangeEvent } from '@mui/material/Select';
+import { ChangeEvent, ChangeEventSelect } from "interfaces";
 
-export interface InformacionComplementariaArgs {
-    barrio: string;
-    bloqueInterior: string;
-    numeroBloqueInterior: string;
-    tipoInmueble: string;
-    numeroTipoInmueble: string;
-    inmuebleOtro: string;
-    informacionAdicional: string;
-}
-
-export interface InformacionBasicaArgs {
+export interface BasicInformationState {
     departamento: string;
     ciudad: string;
     centroPoblado: string;
@@ -21,27 +11,37 @@ export interface InformacionBasicaArgs {
     detallesDireccion3: string;
 }
 
-export interface ChangeEventArgs {
-    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement> | SelectChangeEvent): void;
+export interface ComplementaryInformationState {
+    barrio: string;
+    bloqueInterior: string;
+    numeroBloqueInterior: string;
+    tipoInmueble: string;
+    numeroTipoInmueble: string;
+    inmuebleOtro: string;
+    informacionAdicional: string;
 }
 
-// export interface ChangeEventSelectArgs {
-//     (event: SelectChangeEvent): void;
-// }
+export interface ShippingAddressState {
+    address: string
+    price: number,
+    isFree: boolean
+}
 
-export interface FormHeaderArgs {
+export interface FormHeaderProps {
   number: number,
   description: string
 }
 
-export interface BasicInformationFormArgs {
- handleInformacionBasica: any,
- informacionBasica: InformacionBasicaArgs   
+export interface BasicInformationFormProps {
+ handleChange: ChangeEvent,
+ handleChangeSelect: ChangeEventSelect,
+ state: BasicInformationState   
 }
 
-export interface ComplementaryInformationFormArgs {
- handleInformacionComplementaria: any,
- estadoInformacionComplementaria1: boolean,
- estadoInformacionComplementaria2: boolean,
- informacionComplementaria: InformacionComplementariaArgs
+export interface ComplementaryInformationFormProps {
+ handleChange: ChangeEvent,
+ handleChangeSelect: ChangeEventSelect,
+ isActiveState1: boolean,
+ isActiveState2: boolean,
+ state: ComplementaryInformationState
 }

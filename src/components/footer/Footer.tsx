@@ -31,42 +31,49 @@ import {Link as RouterLink} from "react-router-dom";
 //!Uuids
 import { v4 as uuid } from 'uuid';
 
-//! Navigation Pages
-const NavigationPages = [
-    {
-        _id: uuid(),
-        label: "Categorías",
-        icon: "MenuIcon",
-        status: false,
-        subCategorys: [
-            {
-                link: "",
-                label: "Celulares",
-            },
-            {
-                link: "",
-                label: "Tecnología",
-            },
-            {
-                link: "",
-                label: "Servicios Móviles",
-            },
-            {
-                link: "",
-                label: "Servicios Hogar",
-            },
-            {
-                link: "",
-                label: "Soporte",
-            },
-        ],
-    },
+//!React Router Dom
+import {useLocation} from  "react-router-dom";
+
+//!Interfaces
+import {CategoryState} from "./interfaces";
+
+//! Categories 
+const GeneralCategories =  {
+    _id: uuid(),
+    label: "Categorías",
+    icon: "MenuIcon",
+    isActive: true,
+    subCategories: [
+        {
+            link: "",
+            label: "Celulares",
+        },
+        {
+            link: "",
+            label: "Tecnología",
+        },
+        {
+            link: "",
+            label: "Servicios Móviles",
+        },
+        {
+            link: "",
+            label: "Servicios Hogar",
+        },
+        {
+            link: "",
+            label: "Soporte",
+        },
+    ],
+}
+
+const Categories = [
     {
         _id: uuid(),
         label: "Celulares",
         icon: "PhoneIphoneIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Celulares en Prepago",
@@ -81,8 +88,8 @@ const NavigationPages = [
         _id: uuid(),
         label: "Tecnología",
         icon: "DevicesIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Videojuegos",
@@ -109,8 +116,8 @@ const NavigationPages = [
         _id: uuid(),
         label: "Servicios Móviles",
         icon: "MobileFriendlyIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Cámbiate a Claro Prepago",
@@ -129,8 +136,8 @@ const NavigationPages = [
         _id: uuid(),
         label: "Servicios Hogar",
         icon: "HomeOutlinedIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Arma Tu Play",
@@ -145,8 +152,8 @@ const NavigationPages = [
         _id: uuid(),
         label: "Soporte",
         icon: "",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Anexo 2 IMEI",
@@ -171,16 +178,25 @@ const NavigationPages = [
     },
 ];
 
+const TotalCategories = [GeneralCategories, ...Categories].map(category => ({...category, status: false}))
 
 
 function Footer() {
-    const [navigationPages, setNavigationPages] = useState(NavigationPages);
+    const [categories, setCategories] = useState<CategoryState[]>(() => TotalCategories);
     
+    let {pathname} = useLocation();
+   
     //!Functions
-    const handleNavigationPages = (_id: string): void => {
-        const newNavigationPages = navigationPages.map((page) => page._id === _id ? {...page, status: !page.status} : {...page, status: false})
-        setNavigationPages(newNavigationPages)
+    const handleCategories = (_id: string): void => {
+        const newCategories = categories.map((page) => page._id === _id ? {...page, status: !page.status} : {...page, status: false})
+        setCategories(newCategories)
     }
+
+    //!No mostrar el Header si el pathanme es tal
+    if (pathname === "/cart/security/welcome" || pathname=== "/cart/installation-schedule/successful" ){
+        return null;
+    }
+
     return (
         <>
             {/* Footer Top Mobile */}
@@ -200,11 +216,11 @@ function Footer() {
                     // }
                 >
                     {/* Items Nav Footer Mobile */}
-                    {navigationPages.slice(1).map((page) => (
+                    {categories.slice(1).map((page) => (
                         <Box key={page._id}>
                             <ListItemButton
                                 
-                                onClick={() => handleNavigationPages(page._id)}
+                                onClick={() => handleCategories(page._id)}
                             >
                                 <StyledListItemText primary={page.label} />
                                 {page.status ? <ExpandLess /> : <ExpandMore />}
@@ -215,7 +231,7 @@ function Footer() {
                                 unmountOnExit
                             >
                                 <List component="div" disablePadding>
-                                    {page.subCategorys.map((subCategory) => (
+                                    {page.subCategories.map((subCategory) => (
                                         <ListItemButton
                                             key={subCategory.label}
                                             sx={{pl: 4}}
@@ -288,7 +304,7 @@ function Footer() {
                                     Celulares
                                 </Typography>
                                 <List component="ul" disablePadding>
-                                    {NavigationPages.find(page => page.label === "Celulares")?.subCategorys.map(subCategory => (
+                                    {categories.find(page => page.label === "Celulares")?.subCategories.map(subCategory => (
                                         <Link component={RouterLink} to="" underline="hover" color="inherit" key={subCategory.label}>
                                             <Typography
                                                 variant="body2"
@@ -309,7 +325,7 @@ function Footer() {
                                     Tecnología
                                 </Typography>
                                 <List component="ul" disablePadding>
-                                    {NavigationPages.find(page => page.label === "Tecnología")?.subCategorys.map(subCategory => (
+                                    {categories.find(page => page.label === "Tecnología")?.subCategories.map(subCategory => (
                                         <Link component={RouterLink} to="" underline="hover" color="inherit" key={subCategory.label}>
                                             <Typography
                                                 variant="body2"
@@ -330,7 +346,7 @@ function Footer() {
                                     Servicios Móviles
                                 </Typography>
                                 <List component="ul" disablePadding>
-                                    {NavigationPages.find(page => page.label === "Servicios Móviles")?.subCategorys.map(subCategory => (
+                                    {categories.find(page => page.label === "Servicios Móviles")?.subCategories.map(subCategory => (
                                         <Link component={RouterLink} to="" underline="hover" color="inherit" key={subCategory.label}>
                                             <Typography
                                                 variant="body2"
@@ -351,7 +367,7 @@ function Footer() {
                                     Servicios Hogar
                                 </Typography>
                                 <List component="ul" disablePadding>
-                                    {NavigationPages.find(page => page.label === "Servicios Hogar")?.subCategorys.map(subCategory => (
+                                    {categories.find(page => page.label === "Servicios Hogar")?.subCategories.map(subCategory => (
                                         <Link component={RouterLink} to="" underline="hover" color="inherit" key={subCategory.label}>
                                             <Typography
                                                 variant="body2"
@@ -373,7 +389,7 @@ function Footer() {
                                         Soporte
                                     </Typography>
                                     <List component="ul" disablePadding>
-                                        {NavigationPages.find(page => page.label === "Soporte")?.subCategorys.map(subCategory => (
+                                        {categories.find(page => page.label === "Soporte")?.subCategories.map(subCategory => (
                                             <Link component={RouterLink} to="" underline="hover" color="inherit" key={subCategory.label}>
                                                 <Typography
                                                     variant="body2"

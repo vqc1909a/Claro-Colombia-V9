@@ -165,15 +165,6 @@ function QontoStepIcon(props: StepIconProps) {
   );
 }
 
-
-
-
-
-interface StepperHeaderProps {
-  numberStep: number
-}
-
-
 const StyledStepLabel = styled(StepLabel)(({theme}) => ({
   "& .MuiStepLabel-labelContainer": {
     display: "none",
@@ -183,9 +174,9 @@ const StyledStepLabel = styled(StepLabel)(({theme}) => ({
   }
 }));
 
-function StepperHeader({numberStep}: StepperHeaderProps) {
+function StepperHeader({numberStep}: {numberStep: number}) {
   return (
-    <Box sx={{ width: '100%', pb: {xs: 3, md: 6}, pt: {xs: 6, md: 12}}}>
+    <Box sx={{ width: '100%', pb: {xs: 4, md: 6}, pt: {xs: 6, md: 12}}}>
       <StyledContainer className="container-services">
         {/* Modificaciones al Stepper Progress para mobile */}
         <Hidden mdUp>

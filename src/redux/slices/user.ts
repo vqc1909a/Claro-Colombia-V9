@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import initStates from "./initStates";
+import INIT_STATES from "./initStates";
 import {UserReducerState} from "./reducerStateInterface";
 
 const userSlice = createSlice({
 	name: "user",
-	initialState: initStates.user,
+	initialState: INIT_STATES.user,
 	reducers: {
 		loginRequest(state: UserReducerState, action: PayloadAction) {
 			console.log("Logueandose");

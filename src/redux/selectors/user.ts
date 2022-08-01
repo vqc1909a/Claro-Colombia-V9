@@ -1,11 +1,11 @@
 import {RootReducerState} from "../store";
 
-export const selectIsLogged = (state: RootReducerState) => {
+export const selectIsLogged= (state: RootReducerState) => {
  return state.user.isLogged 
 }
 
 export const selectUser = (state: RootReducerState) => {
- return state.user.user 
+ return state.user.user
 }
 
 export const selectIsError = (state: RootReducerState) => {
@@ -19,5 +19,4 @@ export const selectIsLoading = (state: RootReducerState) => {
 export const selectMessage = (state: RootReducerState) => {
  return state.user.message 
 }
-
 

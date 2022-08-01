@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 
 
 //!Interfaces
-import {ComplementaryInformationFormArgs} from "./interfaces";
+import {ComplementaryInformationFormProps} from "./interfaces";
 
 const barrios = [
   {
@@ -135,7 +135,7 @@ const numerosDeInmueble = [
 ];
 
 
-const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoInformacionComplementaria1, estadoInformacionComplementaria2, informacionComplementaria}: ComplementaryInformationFormArgs) => {
+const ComplementaryInformationForm = ({handleChange, handleChangeSelect, isActiveState1, isActiveState2, state}: ComplementaryInformationFormProps) => {
 
   const {
     barrio,
@@ -145,13 +145,13 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
     numeroTipoInmueble,
     inmuebleOtro,
     informacionAdicional
-  } = informacionComplementaria;
+  } = state;
 
  return (
   <Box sx={{ mb: 2 }}>
    <FormHeader number={2} description={"Diligencia la información complementaria de tu dirección."}></FormHeader>
    <StyledGrid container spacing={3}>
-     {estadoInformacionComplementaria1 && (
+     {isActiveState1 && (
        <>
          {/* Barrio */}
          <StyledGrid item xs={12} sm={6}>
@@ -163,9 +163,10 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
            <StyledSelect
              id="barrio"
              value={barrio}
-             onChange={handleInformacionComplementaria}
+             onChange={handleChangeSelect}
              name="barrio"
              displayEmpty={true}
+             required
            >
               <MenuItem value="" selected disabled>
                   Selecciona
@@ -191,9 +192,10 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
            <StyledSelect
              id="bloqueInterior"
              value={bloqueInterior}
-             onChange={handleInformacionComplementaria}
+             onChange={handleChangeSelect}
              name="bloqueInterior"
              displayEmpty={true}
+             required
 
            >
               <MenuItem value="" selected disabled>
@@ -220,9 +222,10 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
            <StyledSelect
              id="numeroBloqueInterior"
              value={numeroBloqueInterior}
-             onChange={handleInformacionComplementaria}
+             onChange={handleChangeSelect}
              name="numeroBloqueInterior"
              displayEmpty={true}
+             required
            >
               <MenuItem value="" selected disabled>
                 Selecciona
@@ -239,7 +242,7 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
          </StyledGrid>
        </>
      )}
-     {estadoInformacionComplementaria2 && (
+     {isActiveState2 && (
        <>
          {/* Tipo de Inmueble */}
          <StyledGrid item xs={12} sm={6}>
@@ -251,11 +254,10 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
            <StyledSelect
              id="tipoInmueble"
              value={tipoInmueble}
-             onChange={(e) =>
-               handleInformacionComplementaria(e)
-             }
+             onChange={handleChangeSelect}
              name="tipoInmueble"
              displayEmpty={true}
+             required
            >
               <MenuItem value="" selected disabled>
                 Selecciona
@@ -280,11 +282,10 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
            <StyledSelect
              id="numeroTipoInmueble"
              value={numeroTipoInmueble}
-             onChange={(e) =>
-               handleInformacionComplementaria(e)
-             }
+             onChange={handleChangeSelect}
              name="numeroTipoInmueble"
              displayEmpty={true}
+             required
            >
               <MenuItem value="" selected disabled>
                 Selecciona
@@ -311,16 +312,15 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
                error
                id="inmuebleOtro"
                value={inmuebleOtro}
-               onChange={(e) =>
-                 handleInformacionComplementaria(e)
-               }
+               onChange={handleChange}
                name="inmuebleOtro"
+               type="text"
              ></StyledTextField>
            </StyledGrid>
          )}
        </>
      )}
-     {/* Infomración Adicional */}
+     {/* Información Adicional */}
      <StyledGrid item xs={12}>
        <StyledInputLabel
          htmlFor="informacionAdicional"
@@ -330,11 +330,10 @@ const ComplementaryInformationForm = ({handleInformacionComplementaria, estadoIn
        <StyledTextField
          id="informacionAdicional"
          value={informacionAdicional}
-         onChange={(e) =>
-           handleInformacionComplementaria(e)
-         }
+         onChange={handleChange}
          name="informacionAdicional"
          helperText="Ej. Vereda la Estancia"
+         type="text"
        ></StyledTextField>
      </StyledGrid>
    </StyledGrid>

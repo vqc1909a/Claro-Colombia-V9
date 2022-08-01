@@ -30,11 +30,11 @@ import useScrollToTop from "utils/hooks/useScrollToTop";
 
 
 //! Interfaces
-import {ItemArgs, HeaderHomeSectionArgs} from "./interfaces";
+import {ItemProps, HeaderHomeSectionProps} from "./interfaces";
 import StyledButton from "components/StyledUi/StyledButton";
 
 
-function Item({item}: ItemArgs) {
+function Item({item}: ItemProps) {
     const {image} = item;
     return (
             // Por el momento aplicaremos       estilo a este paper y no al hero__content xq esta es una biblioteca de tercero y no tiene identificadore mui para hacer alguna modificación
@@ -55,8 +55,6 @@ function Item({item}: ItemArgs) {
             })}>
                 <StyledImage src={image} loading="lazy"></StyledImage>
             </Paper>
-            
-        
     );
 }
 
@@ -340,7 +338,7 @@ const itemsSectionNewCellPhones = [
 
 
 
-const HeaderHomeSection = ({title}: HeaderHomeSectionArgs) => {
+const HeaderHomeSection = ({title}: HeaderHomeSectionProps) => {
     return (
         <Box sx={{display: "flex", alignItems: "flex-end"}}>
             <Typography
@@ -364,15 +362,8 @@ const HeaderHomeSection = ({title}: HeaderHomeSectionArgs) => {
 };
 
 
-// let sizeWidth: number = 0;
 
 function Home() {
-
-    // const reportWindowSize = () => {
-    //     sizeWidth = window.innerWidth;
-    // }
-    // window.addEventListener('resize', reportWindowSize);
-
     //! Effects
     useScrollToTop();
     

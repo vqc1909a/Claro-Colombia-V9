@@ -1,0 +1,2 @@
+import CartInstallationScheduleHome from "./CartInstallationSchedule"
+export default CartInstallationScheduleHome

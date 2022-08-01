@@ -1,14 +1,14 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import initStates from "./initStates";
+import INIT_STATES from "./initStates";
 import {Plan, HomePlansReducerState} from "./reducerStateInterface";
 
 const homePlansSlice = createSlice({
 	name: "homePlans",
-	initialState: initStates.homePlans,
+	initialState: INIT_STATES.homePlans,	
 	reducers: {
 		getHomePlansRequest(state: HomePlansReducerState, action: PayloadAction) {
 			console.log("Obteniendo planes de servicios hogar")
-			state.isLoading = true;
+			state.isLoading = true;	
 		},
 		getHomePlansSuccess(state: HomePlansReducerState, action: PayloadAction<Plan[]>) {
 			console.log("Obteniendo planes de servicios hogar exitoso")
@@ -34,7 +34,7 @@ const homePlansSlice = createSlice({
 				plan.isSelected = !plan.isSelected;
 			}
 		},
-		resetSelectedHomePlans(state: HomePlansReducerState, action: PayloadAction) {
+		resetHomePlans(state: HomePlansReducerState, action: PayloadAction) {
 			console.log("Reseteando Planes Seleccionados");
 			sessionStorage.removeItem("homePlans")
 			state.plans = state.plans.map(plan => ({...plan, isSelected: false}));
@@ -53,7 +53,7 @@ export const {
 	getHomePlansSuccess,
 	getHomePlansError,
 	toggleSelectedHomePlan,
-	resetSelectedHomePlans,
+	resetHomePlans,
 	getSelectedHomePlans
 } = homePlansSlice.actions;
 

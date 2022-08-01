@@ -1,2 +1,2 @@
-import HomeCart from "./HomeCart";
+import HomeCart from "./CartHome";
 export default HomeCart;

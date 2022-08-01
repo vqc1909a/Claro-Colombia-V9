@@ -6,14 +6,11 @@ export interface TabPanelProps {
     value: number;
 }
 
-export interface CardOne {
+export interface CardOneProps {
   item: Plan
 }
 
-export interface CardTwo {
+export interface CardTwoProps {
   item: Plan
 }
 
-export interface HomeServicesPlansTabHeaderArgs {
-  title: string
-}

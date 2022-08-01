@@ -41,7 +41,7 @@ let theme = responsiveFontSizes(
         fontSize: "2.3rem"
       },
       h6: {
-        fontSize: "1.15rem"
+        fontSize: "1.25rem"
       },
       overline: {
         fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",

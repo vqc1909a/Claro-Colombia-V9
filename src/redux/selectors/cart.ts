@@ -1,5 +1,5 @@
 import {RootReducerState} from "../store";
-import {ShippingAddress} from "../reducers/reducerStateInterface";
+import {ShippingAddress, UserInformation, TermsContract, InstallationSchedule, CartReducerState} from "../slices/reducerStateInterface";
 
 export const selectItems = (state: RootReducerState): any[]  => {
  return state.cart.items 
@@ -23,6 +23,22 @@ export const selectShippingAddress = (state: RootReducerState): ShippingAddress 
 
 export const selectTotalPrice = (state: RootReducerState): number  => {
  return state.cart.totalPrice 
+}
+
+export const selectUserInformation = (state: RootReducerState): UserInformation  => {
+ return state.cart.userInformation 
+}
+
+export const selectTermsContract = (state: RootReducerState): TermsContract  => {
+ return state.cart.termsContract 
+}
+
+export const selectInstallationSchedule = (state: RootReducerState): InstallationSchedule => {
+    return state.cart.installationSchedule
+}
+
+export const selectCart = (state: RootReducerState): CartReducerState => {
+    return state.cart
 }
 
 

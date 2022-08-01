@@ -8,13 +8,15 @@ import Hidden from "@mui/material/Hidden";
 import StyledTextField from "components/StyledUi/StyledTextField";
 import StyledButton from "components/StyledUi/StyledButton";
 
+//!Helpers
+import {separateThousands} from "utils/helpers/formatNumber";
 
 
-function PurchaseSummary({totalPrice, plansPrice, taxPrice, numberPackages, shippingAddress, handleCart}: PurchaseSummaryProps){
+function PurchaseSummary({totalPrice, plansPrice, taxPrice, shippingAddress, handleCart}: PurchaseSummaryProps){
     let {isFree, price} = shippingAddress;
 
      return (
-        <Box sx={(theme) => ({pl: {xs: 0, md: 4}, borderLeft: {xs: "none", md: `2px solid ${theme.palette.grey['300']}`}, height: "100%", pt: {xs: 4, md: 0}})}>
+        <Box sx={(theme) => ({pl: {xs: 0, md: 3}, borderLeft: {xs: "none", md: `2px solid ${theme.palette.grey['300']}`}, height: "100%", pt: {xs: 4, md: 0}})}>
             <Typography component="p" sx={{mb: 2, fontWeight: "bolder", typography: {xs: "h4", md: "h5"}}} style={{fontWeight: "bolder"}}>Resumen de Compra</Typography>
 
             {/* Codigo del Vendedor */}
@@ -23,7 +25,6 @@ function PurchaseSummary({totalPrice, plansPrice, taxPrice, numberPackages, ship
                 <StyledTextField
                     id="vendorCode"
                     name="vendorCode"
-                    size="small"
                     value=""
                     placeholder="Ingresa el código"
                     onChange={() => {}}
@@ -34,29 +35,29 @@ function PurchaseSummary({totalPrice, plansPrice, taxPrice, numberPackages, ship
 
             {/* SubTotal 1 */}
             <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2}}>
-                <Typography variant="h5" sx={{mb: .5, color: theme => theme.palette.grey['500']}}>SubTotal (1)</Typography>
+                <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['500']}}>SubTotal (1)</Typography>
 
-                <Typography variant="h5" sx={{mb: .5, color: theme => theme.palette.grey['700']}}>${plansPrice * numberPackages}</Typography>                                                
+                <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['700']}}>${separateThousands(plansPrice)}</Typography>                                                
             </Box>
 
             {/* Impuestos */}
             <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1}}>
                 <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['500']}}>Impuestos</Typography>
 
-                <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['700']}}>${taxPrice * numberPackages}</Typography>                                                
+                <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['700']}}>${separateThousands(taxPrice)}</Typography>                                                
             </Box>
             
             {/* Instalación Gratis */}
             <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2}}>
                 <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['500']}}>Instalación {isFree ? "Gratis": ""}</Typography>
 
-                <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['700']}}>${price}</Typography>                                                
+                <Typography variant="h6" sx={{mb: .5, color: theme => theme.palette.grey['700']}}>${separateThousands(price)}</Typography>                                                
             </Box>
 
             {/* Total */}
             <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between", mb: 4}}>
-                <Typography variant="h5" sx={{mb: .5, fontWeight: "bolder"}}>Total</Typography>
-                <Typography variant="h5" sx={{mb: .5, fontWeight: "bolder"}}>${totalPrice * numberPackages}</Typography>                                                
+                <Typography variant="h6" sx={{mb: .5, fontWeight: "bolder"}}>Total</Typography>
+                <Typography variant="h6" sx={{mb: .5, fontWeight: "bolder"}}>${separateThousands(totalPrice)}</Typography>                                                
             </Box>
             
             <Hidden mdDown>

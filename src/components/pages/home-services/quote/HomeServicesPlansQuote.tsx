@@ -26,8 +26,6 @@ import StyledCard from "components/StyledUi/StyledCard";
 import StyledImage from "components/StyledUi/StyledImage";
 import StyledButton from "components/StyledUi/StyledButton";
 
-
-
 //!React Router Dom
 import {useNavigate, Link as RouterLink} from "react-router-dom";
 
@@ -42,6 +40,8 @@ import * as CART_ACTIONS from "redux/slices/cart";
 import * as PLANS_SELECTORS from "redux/selectors/homeServicesPlans";
 import * as USER_SELECTORS from "redux/selectors/user";
 
+//!Helpers
+import {separateThousands} from "utils/helpers/formatNumber";
 
 //!Hooks
 import useScrollToTop from "utils/hooks/useScrollToTop";
@@ -63,13 +63,13 @@ function HomeServicesPlansQuote() {
     let isLogged = useAppSelector(USER_SELECTORS.selectIsLogged);
     let dispatch = useAppDispatch();
 
-    //! Effects
-    useScrollToTop();
-
     const handleShoppingCart = () => {
         dispatch(CART_ACTIONS.addItems(selectedPlans));
         navigate("/cart")
     }
+
+    //! Effects
+    useScrollToTop();
     return (
         <Fade in={true} timeout={1000} easing="ease-in-out">
             <Box
@@ -101,7 +101,7 @@ function HomeServicesPlansQuote() {
                         <StyledGrid item xs={12} sx={{mx: {xs: 0, md: 4}}}>
                             <StyledCard variant="outlined" className="card-services-container card-services-container--quote">
                                 <CardContent className="card-services-container__content">
-                                    {/* Header Cards Quote*/}
+                                    {/* Header Cards Resumen*/}
                                     <Box sx={{mb: 3}}>
                                         
                                         <Hidden smUp>
@@ -121,7 +121,7 @@ function HomeServicesPlansQuote() {
                                         </Box>
                                     </Box>
 
-                                    {/* Content Cards Quote*/}
+                                    {/* Content Cards Resumen*/}
                                     <StyledGrid container spacing={5} sx={{mb: 5}}>
                                         {/* All Plans except additionals */}
                                         {selectedPlans.filter(plan => plan.category !== "adicionales").map(plan => (
@@ -200,7 +200,7 @@ function HomeServicesPlansQuote() {
                                                                         mb: -0.5,
                                                                     })}
                                                                 >
-                                                                    ${plan.comboPrice}
+                                                                    ${separateThousands(plan.comboPrice)}
                                                                 </Typography>   
                                                             </Box>
                                                             <Box
@@ -224,7 +224,7 @@ function HomeServicesPlansQuote() {
                                                                     component="span"
                                                                     sx={{mt: 0.5, mb: -0.5, textDecoration: "line-through"}}
                                                                 >
-                                                                    ${plan.unitPrice}
+                                                                    ${separateThousands(plan.unitPrice)}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -313,7 +313,7 @@ function HomeServicesPlansQuote() {
                                                                                 mb: -0.5,
                                                                             })}
                                                                         >
-                                                                            ${plan.unitPrice}
+                                                                            ${separateThousands(plan.unitPrice)}
                                                                         </Typography>   
                                                                     </Box>  
                                                                 </Box>
@@ -335,7 +335,7 @@ function HomeServicesPlansQuote() {
                                                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 1, borderTop: theme => `2px dashed ${theme.palette.grey["400"]}`}}>
                                                         <Typography component="span" sx={{typography: {xs: "h5", md: "h5"}}} style={{fontWeight: "bolder"}}>Precio paquete: </Typography>
 
-                                                        <Typography component="span" sx={{typography: {xs: "h4", md: "h5"}}} style={{fontWeight: "bolder"}}>${selectedPlans.reduce((a, b) => a + (b.comboPrice || b.unitPrice), 0)}/mes</Typography>
+                                                        <Typography component="span" sx={{typography: {xs: "h4", md: "h5"}}} style={{fontWeight: "bolder"}}>${separateThousands(selectedPlans.reduce((a, b) => a + (b.comboPrice || b.unitPrice), 0))}/mes</Typography>
                                                     </Box>
 
                                                     <Hidden mdUp>

@@ -17,8 +17,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
-
-
 //! Icons
 import MenuIcon from "@mui/icons-material/Menu";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
@@ -65,13 +63,11 @@ import {Link as RouterLink, useNavigate, useLocation} from "react-router-dom";
 import { v4 as uuid } from 'uuid';
 import { getLoggedUser } from "api/services/user";
 
-
-
 //! Interfaces
-type IconsNavigationInterface = {
-    [index: string]: any
-}
+import {CategoryState, IconsNavigationInterface} from "./interfaces";
 
+
+//!Apis
 const IconsNavigation: IconsNavigationInterface = {
     "MenuIcon": <MenuIcon fontSize="medium"></MenuIcon>,
     "PhoneIphoneIcon": <PhoneIphoneIcon fontSize="medium"></PhoneIphoneIcon>,
@@ -80,42 +76,42 @@ const IconsNavigation: IconsNavigationInterface = {
     "HomeOutlinedIcon": <HomeOutlinedIcon fontSize="medium"></HomeOutlinedIcon>
 }
 
-//! Navigation Pages
-const NavigationPagesDefault = [
-    {
-        _id: uuid(),
-        label: "Categorías",
-        icon: "MenuIcon",
-        status: false,
-        subCategorys: [
-            {
-                link: "",
-                label: "Celulares"
-            },
-            {
-                link: "",
-                label: "Tecnología"
-            },
-            {
-                link: "",
-                label: "Servicios Móviles"
-            },
-            {
-                link: "",
-                label: "Servicios Hogar"
-            },
-            {
-                link: "",
-                label: "Soporte"
-            }
-        ]
-    },
+const GeneralCategories =  {
+    _id: uuid(),
+    label: "Categorías",
+    icon: "MenuIcon",
+    isActive: true,
+    subCategories: [
+        {
+            link: "",
+            label: "Celulares"
+        },
+        {
+            link: "",
+            label: "Tecnología"
+        },
+        {
+            link: "",
+            label: "Servicios Móviles"
+        },
+        {
+            link: "",
+            label: "Servicios Hogar"
+        },
+        {
+            link: "",
+            label: "Soporte"
+        }
+    ]
+}
+
+const Categories = [
     {
         _id: uuid(),
         label: "Celulares",
         icon: "PhoneIphoneIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Celulares en Prepago"
@@ -130,8 +126,8 @@ const NavigationPagesDefault = [
         _id: uuid(),
         label: "Tecnología",
         icon: "DevicesIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Videojuegos"
@@ -158,8 +154,8 @@ const NavigationPagesDefault = [
         _id: uuid(),
         label: "Servicios Móviles",
         icon: "MobileFriendlyIcon",
-        status: false,
-        subCategorys: [
+        isActive: true,
+        subCategories: [
             {
                 link: "",
                 label: "Cámbiate a Claro Prepago"
@@ -178,8 +174,8 @@ const NavigationPagesDefault = [
         _id: uuid(),
         label: "Servicios Hogar",
         icon: "HomeOutlinedIcon",
-        status: false,
-        subCategorys: [{
+        isActive: true,
+        subCategories: [{
             link: "/servicios-hogar-direccion",
             label: "Arma Tu Play"
         }, 
@@ -190,15 +186,28 @@ const NavigationPagesDefault = [
     },
 ];
 
+const totalCategories = [GeneralCategories, ...Categories].map(category => ({...category, status: false}));
 
-//! Evento de renderizado de ancho
+//! Eventos
 let sizeWidth: number = 0;
+const reportWindowSize = () => {
+    sizeWidth = window.innerWidth;
+}
+window.addEventListener('resize', reportWindowSize);
+
+//!Components
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+props,
+ref,
+) {
+return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 
 function Header() {
-    const [stateDrawer, setStateDrawer] = useState(false);
-    const [navigationPages, setNavigationPages] = useState(NavigationPagesDefault);
-
-    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [stateDrawer, setStateDrawer] = useState<boolean>(false);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+    const [categories, setCategories] = useState<CategoryState[]>(() => totalCategories);
 
     let navigate = useNavigate();
     let dispatch = useAppDispatch();
@@ -211,9 +220,9 @@ function Header() {
     const headerRef = useRef<HTMLDivElement>(null);
 
     //!Functions
-    const handleNavigationPages = (_id: string): void => {
-        const newNavigationPages = navigationPages.map((page) => page._id === _id ? {...page, status: !page.status} : {...page, status: false})
-        setNavigationPages(newNavigationPages)
+    const handleClickCategories = (_id: string): void => {
+        const newCategories = categories.map((page) => page._id === _id ? {...page, status: !page.status} : {...page, status: false})
+        setCategories(newCategories)
     }
 
     const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -225,60 +234,8 @@ function Header() {
     };
 
     const handleCloseFooterBottomFloat = () => {
-        setNavigationPages(NavigationPagesDefault)
+        setCategories(totalCategories)
     }
-
-    const reportWindowSize = () => {
-        sizeWidth = window.innerWidth;
-    }
-    window.addEventListener('resize', reportWindowSize);
-
-    //! Effects
-    useEffect((): any => {
-        if (!isLogged) return null;
-        setOpenSnackbar(true);
-    }, [isLogged])
-
-    useEffect((): any => {
-        const token: any = localStorage.getItem('token');
-        if (!token) return null;
-        ( async () => {
-            try{
-                dispatch(USER_ACTIONS.getLoggedUserRequest());
-                const {data} = await getLoggedUser({token});
-                dispatch(USER_ACTIONS.getLoggedUserSuccess({...data[0]}));
-            }catch(err: any){
-                const {data} = err.response;
-                dispatch(USER_ACTIONS.getLoggedUserError({message: data}));
-            }
-        })();
-        // eslint-disable-next-line
-    }, [])
-
-    useEffect(() => {
-        document.addEventListener('click', (e) => {
-            let isClickInsideElement = headerRef.current && headerRef.current.contains(e.target as Node);
-            if (sizeWidth > 1024 && !isClickInsideElement) {
-                setNavigationPages(NavigationPagesDefault);
-            }
-        })
-    }, [])
-
-    //!No show Header Component if pathname is /login
-    let location = useLocation();
-    if (location.pathname === "/login"){
-        return null;
-    }
-    
-
-
-    //!Alert Component
-    const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-    props,
-    ref,
-    ) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-    });
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (
@@ -293,6 +250,48 @@ function Header() {
         setStateDrawer(open);
     };
 
+    //! Effects
+    useEffect((): any => {
+        if (!isLogged) return null;
+        setOpenSnackbar(true);
+    }, [isLogged])
+
+    useEffect((): any => {
+        const token = JSON.parse(localStorage.getItem('token') as string);
+        if (!token) return null;
+
+        const getUser = async () => {
+            try{
+                dispatch(USER_ACTIONS.getLoggedUserRequest());
+                const {data} = await getLoggedUser({token});
+                dispatch(USER_ACTIONS.getLoggedUserSuccess({...data[0]}));
+            }catch(err: any){
+                const message = err.response ? err.response.data : err.message
+                dispatch(USER_ACTIONS.getLoggedUserError({message}));
+            }
+        }
+        getUser();
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        document.addEventListener('click', (e) => {
+            let isClickInsideElement = headerRef.current && headerRef.current.contains(e.target as Node);
+            if (sizeWidth > 1024 && !isClickInsideElement) {
+                setCategories(categories);
+            }
+        })
+        //eslint-disable-next-line
+    }, [])
+
+    //!No mostrar el Header si el pathanme es tal
+    let {pathname} = useLocation();
+    if (pathname === "/login" || pathname === "/cart/security/welcome" || pathname === "/cart/installation-schedule/successful"){
+        return null;
+    }
+    
+
+    //!Controlled Components
     //!Get Mobile Menu
     const getMobileMenu = () => (
         <Box
@@ -359,11 +358,11 @@ function Header() {
                 // }
             >
                 {/* Items Nav Header Mobile */}
-                {navigationPages.slice(1).map((page) => (
+                {categories.slice(1).map((page) => (
                     <Box key={page._id}>
                         <ListItemButton
                             key={page._id}
-                            onClick={() => handleNavigationPages(page._id)}
+                            onClick={() => handleClickCategories(page._id)}
                         >
                             <StyledListItemText primary={page.label} />
                             {page.status ? (
@@ -378,7 +377,7 @@ function Header() {
                         <Collapse in={page.status} timeout="auto" unmountOnExit>
                             <Divider />
                             <List component="div" disablePadding>
-                                {page.subCategorys.map(subCategory => (
+                                {page.subCategories.map(subCategory => (
                                     <ListItemButton key={subCategory.label} sx={{pl: 4}} onClick={() => navigate(`${subCategory.link}`)}>
                                         <ListItemText primary={subCategory.label} />
                                     </ListItemButton>
@@ -649,7 +648,7 @@ function Header() {
                             component="nav"
                             sx={{position: "relative"}}
                         >
-                            {navigationPages.map((page) => (
+                            {categories.map((page) => (
                                 // Items del Menú
                                 <Box
                                     key={page._id}
@@ -662,7 +661,7 @@ function Header() {
                                             color: (theme) => theme.palette.common.black,
                                         }}
                                         startIcon={IconsNavigation[page.icon]}
-                                        onClick={() => handleNavigationPages(page._id)}
+                                        onClick={() => handleClickCategories(page._id)}
                                     >
                                         <Typography
                                             variant="body1"
@@ -697,7 +696,7 @@ function Header() {
                                             disablePadding
                                             sx={{textAlign: "left"}}
                                         >
-                                            {page.subCategorys.map(
+                                            {page.subCategories.map(
                                                 (subCategory) => (
                                                     <Link
                                                         component={RouterLink}
@@ -722,7 +721,7 @@ function Header() {
 
                     {/* Header Bottom Float */}
                     <Fade
-                        in={navigationPages.some(page => page.status === true)}
+                        in={categories.some(page => page.status === true)}
                         timeout={600}
                         
                     > 

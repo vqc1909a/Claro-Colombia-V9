@@ -1,9 +1,9 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-import {FormHeaderArgs} from "./interfaces";
+import {FormHeaderProps} from "./interfaces";
 
-const FormHeader = ({number, description}: FormHeaderArgs) => (
+const FormHeader = ({number, description}: FormHeaderProps) => (
   <Typography
     variant="body1"
     component="p"
